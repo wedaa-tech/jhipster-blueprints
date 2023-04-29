@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "generator-jhipster": "7.9.3",
+    "generator-jhipster": "file:/usr/src/app/generator-jhipster",
     "yosay": "^2.0.2"
   },
   "devDependencies": {

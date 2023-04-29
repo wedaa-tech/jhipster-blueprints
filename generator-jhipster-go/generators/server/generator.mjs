@@ -1,27 +1,27 @@
 import chalk from 'chalk';
 import yosay from 'yosay';
-import ServerGenerator from 'generator-jhipster/esm/generators/server';
-import {
-  PRIORITY_PREFIX,
-  INITIALIZING_PRIORITY,
-  PROMPTING_PRIORITY,
-  CONFIGURING_PRIORITY,
-  COMPOSING_PRIORITY,
-  LOADING_PRIORITY,
-  PREPARING_PRIORITY,
-  DEFAULT_PRIORITY,
-  WRITING_PRIORITY,
-  POST_WRITING_PRIORITY,
-  INSTALL_PRIORITY,
-  POST_INSTALL_PRIORITY,
-  END_PRIORITY,
-} from 'generator-jhipster/esm/priorities';
+import ServerGenerator from 'generator-jhipster/generators/server';
+// import {
+//   PRIORITY_PREFIX,
+//   INITIALIZING_PRIORITY,
+//   PROMPTING_PRIORITY,
+//   CONFIGURING_PRIORITY,
+//   COMPOSING_PRIORITY,
+//   LOADING_PRIORITY,
+//   PREPARING_PRIORITY,
+//   DEFAULT_PRIORITY,
+//   WRITING_PRIORITY,
+//   POST_WRITING_PRIORITY,
+//   INSTALL_PRIORITY,
+//   POST_INSTALL_PRIORITY,
+//   END_PRIORITY,
+// } from 'generator-jhipster/esm/priorities';
 
 import { askForServerSideOpts } from './prompts.mjs';
 export default class extends ServerGenerator {
   constructor(args, opts, features) {
-    super(args, opts, { taskPrefix: PRIORITY_PREFIX, ...features });
-
+    // super(args, opts, { taskPrefix: PRIORITY_PREFIX, ...features });
+    super(args, opts, features);
     if (this.options.help) return;
 
     if (!this.options.jhipsterContext) {
@@ -29,16 +29,16 @@ export default class extends ServerGenerator {
     }
   }
 
-  get [INITIALIZING_PRIORITY]() {
+  get [ServerGenerator.INITIALIZING]() {
     return {
       ...super._initializing(),
-      async initializingTemplateTask() {},
+      async initializingTemplateTask() { },
     };
   }
 
-  get [PROMPTING_PRIORITY]() {
+  get [ServerGenerator.PROMPTING]() {
     return {
-       
+
       // ...super._prompting(),
       // async promptingTemplateTask() {},
       prompting() {
@@ -53,42 +53,42 @@ export default class extends ServerGenerator {
     };
   }
 
-  get [CONFIGURING_PRIORITY]() {
+  get [ServerGenerator.CONFIGURING]() {
     return {
       // ...super._configuring(),
       // async configuringTemplateTask() {},
     };
   }
 
-  get [COMPOSING_PRIORITY]() {
+  get [ServerGenerator.COMPOSING]() {
     return {
       // ...super._composing(),
       // async composingTemplateTask() {},
     };
   }
 
-  get [LOADING_PRIORITY]() {
+  get [ServerGenerator.LOADING]() {
     return {
       // ...super._loading(),
       // async loadingTemplateTask() {},
     };
   }
 
-  get [PREPARING_PRIORITY]() {
+  get [ServerGenerator.PREPARING]() {
     return {
-    //   ...super._preparing(),
-    //   async preparingTemplateTask() {},
+      //   ...super._preparing(),
+      //   async preparingTemplateTask() {},
     };
   }
 
-  get [DEFAULT_PRIORITY]() {
+  get [ServerGenerator.DEFAULT]() {
     return {
       // ...super._default(),
       // async defaultTemplateTask() {},
     };
   }
 
-  get [WRITING_PRIORITY]() {
+  get [ServerGenerator.WRITING]() {
     return {
       // ...super._writing(),
       // async writingTemplateTask() {
@@ -97,45 +97,46 @@ export default class extends ServerGenerator {
       //       files: [{ templates: ['template-file-server'] }],
       //     },
       //     context: this,
-        // });
-        //},
-        writing() {
-          this.fs.copyTpl(
-            this.templatePath("go"),
-            this.destinationPath(),{
-              serverPort:this.serverPort,
-              packageName:this.packageName
-            }
-          );
+      // });
+      //},
+      writing() {
+        this.fs.copyTpl(
+          this.templatePath("go"),
+          this.destinationPath(), {
+          serverPort: this.serverPort,
+          packageName: this.packageName,
+          baseName: this.baseName
         }
-      };
+        );
+      }
+    };
   }
 
-  get [POST_WRITING_PRIORITY]() {
+  get [ServerGenerator.POST_WRITING]() {
     return {
       ...super._postWriting(),
-      async postWritingTemplateTask() {},
+      async postWritingTemplateTask() { },
     };
   }
 
-  get [INSTALL_PRIORITY]() {
+  get [ServerGenerator.INSTALL]() {
     return {
       ...super._install(),
-      async installTemplateTask() {},
+      async installTemplateTask() { },
     };
   }
 
-  get [POST_INSTALL_PRIORITY]() {
+  get [ServerGenerator.POST_INSTALL]() {
     return {
       ...super._postInstall(),
-      async postInstallTemplateTask() {},
+      async postInstallTemplateTask() { },
     };
   }
 
-  get [END_PRIORITY]() {
+  get [ServerGenerator.END]() {
     return {
       ...super._end(),
-      async endTemplateTask() {},
+      async endTemplateTask() { },
     };
   }
 }

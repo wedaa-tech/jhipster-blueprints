@@ -9,6 +9,8 @@ import (
  "golang.org/x/oauth2"
 	_ "github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"log"
+	"os"
 )
 
 func goDotEnvVariable(key string) string {

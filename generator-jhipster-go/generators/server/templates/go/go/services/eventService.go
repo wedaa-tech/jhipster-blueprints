@@ -26,6 +26,14 @@ func Health(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w,"hello");
 }
 
+func Liveness(w http.ResponseWriter, r *http.Request){
+	fmt.Fprintf(w,"liveness status OK!");
+}
+
+func Readiness(w http.ResponseWriter, r *http.Request){
+	fmt.Fprintf(w,"readiness status OK!");
+}
+
 // CreateEvent godoc
 // @Summary Create a new event
 // @Description Create a new event with the input paylod
