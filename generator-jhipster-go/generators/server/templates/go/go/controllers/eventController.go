@@ -26,4 +26,8 @@ func (t EventController) RegisterRoutes(router *mux.Router) {
 	router.Handle("/delete/{id}",http.HandlerFunc(services.DeleteEvent)).Methods("DELETE")
 	// Swagger
 	router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+
+
+	router.Handle("/management/health/readiness", http.HandlerFunc(services.Readiness)).Methods("GET")
+	router.Handle("/management/health/liveness", http.HandlerFunc(services.Liveness)).Methods("GET")
 }

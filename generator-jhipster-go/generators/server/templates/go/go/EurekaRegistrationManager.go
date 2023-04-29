@@ -8,16 +8,16 @@ import (
 	"github.com/google/uuid"
 	"os"
 	"<%= packageName %>/customlogger"
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 
 )
-func goDotEnvVariable(key string) string {
-	err := godotenv.Load(".env")
-	if err != nil {
-	  log.Fatalf("Error loading .env file")
-	}
-	return os.Getenv(key)
-  }
+// func goDotEnvVariable(key string) string {
+// 	err := godotenv.Load(".env")
+// 	if err != nil {
+// 	  log.Fatalf("Error loading .env file")
+// 	}
+// 	return os.Getenv(key)
+//   }
 
 /**
 Below is the format required by Eureka to register and application instance
@@ -78,12 +78,12 @@ type EurekaRegistrationManager struct {
 func (erm EurekaRegistrationManager) RegisterWithSerivceRegistry(eurekaConfigs RegistrationVariables) {
 	customlogger.Printfun("info","Registering service with status : STARTING")    
 	body :=  erm.getBodyForEureka("STARTING")    
-	helper.MakePostCall(eurekaConfigs.ServiceRegistryURL()+"msg1", body, nil)
+	helper.MakePostCall(eurekaConfigs.ServiceRegistryURL()+"<%= baseName %>", body, nil)
 	customlogger.Printfun("info","Waiting for 10 seconds for application to start properly")    	
 	time.Sleep(10 * time.Second)
 	customlogger.Printfun("info","Updating the status to : UP")    	
 	bodyUP :=  erm.getBodyForEureka("UP")
-	helper.MakePostCall(eurekaConfigs.ServiceRegistryURL()+"msg1", bodyUP, nil)
+	helper.MakePostCall(eurekaConfigs.ServiceRegistryURL()+"<%= baseName %>", bodyUP, nil)
 }
 
 func (erm EurekaRegistrationManager) SendHeartBeat(eurekaConfigs RegistrationVariables) {
@@ -94,7 +94,7 @@ func (erm EurekaRegistrationManager) SendHeartBeat(eurekaConfigs RegistrationVar
 	}
 	job := func() {
 		customlogger.Printfun("info","sending heartbeat : "+ time.Now().UTC().String())    	
-		helper.MakePutCall(eurekaConfigs.ServiceRegistryURL()+"msg1/"+hostname, nil, nil)
+		helper.MakePutCall(eurekaConfigs.ServiceRegistryURL()+ "<%= baseName %>/"+hostname, nil, nil)
 	}
 	// Run every 25 seconds but not now.
 	scheduler.Every(25).Seconds().Run(job)
@@ -127,7 +127,7 @@ func (erm EurekaRegistrationManager) getBodyForEureka(status string) *AppRegistr
 	statusPageUrl := "http://"+hostname+":"+httpport+"/status"
 	healthCheckUrl := "http://"+hostname+":"+httpport+"/healthcheck"
 
-	instance := InstanceDetails{instanceId,hostname, "msg1", "msg1", "msg1",
+	instance := InstanceDetails{instanceId,hostname, "<%= baseName %>", "<%= baseName %>", "<%= baseName %>",
 		ipAddress,status , port,securePort, healthCheckUrl, statusPageUrl, homePageUrl, dataCenterInfo}
 
 	body := &AppRegistrationBody{instance}

@@ -18,7 +18,7 @@ var once sync.Once
 
 func GetInstance() *loggers {
     once.Do(func() {
-        logger = createLogger("file.log")
+        logger = createLogger("/var/logs/<%= baseName %>.log")
     })
     return logger
 }
