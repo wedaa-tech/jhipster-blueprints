@@ -21,17 +21,30 @@ type Event struct {
 	Description string `json:”Description”`
 }
 
+type Response struct {
+    Status string `json:"status"`
+}
+
 
 func Health(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w,"hello");
 }
 
-func Liveness(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w,"liveness status OK!");
+
+func Liveness(w http.ResponseWriter, r *http.Request) {
+    response := Response{Status: "UP"}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(response)
 }
 
 func Readiness(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w,"readiness status OK!");
+    response := Response{Status: "UP"}
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(response)
 }
 
 // CreateEvent godoc
