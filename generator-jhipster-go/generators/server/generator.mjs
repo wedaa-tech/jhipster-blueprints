@@ -108,6 +108,12 @@ export default class extends ServerGenerator {
           baseName: this.baseName
         }
         );
+        this.fs.copyTpl(
+          this.templatePath("go/go/.env"),
+          this.destinationPath("go/.env"), {
+          serverPort: this.serverPort
+        }
+        );
       }
     };
   }

@@ -9,6 +9,6 @@ COPY . .
 
 RUN go mod tidy
 
-EXPOSE 9001
+EXPOSE <%= serverPort %>
 
 CMD ["go","run","."]
