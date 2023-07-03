@@ -8,29 +8,8 @@ import (
 	"os"
 	"github.com/micro/micro/v3/service/logger"
 	"strconv"
+	app "<%= packageName %>/config"
 )
-/**
-Below is the format required by Eureka to register and application instance
-{
-    "instance": {
-        "hostName": "MY_HOSTNAME",
-        "app": "org.github.hellosatish.microservicepattern.awesomeproject",
-        "vipAddress": "org.github.hellosatish.microservicepattern.awesomeproject",
-        "secureVipAddress": "org.github.hellosatish.microservicepattern.awesomeproject"
-        "ipAddr": "10.0.0.10",
-        "status": "STARTING",
-        "port": {"$": "8080", "@enabled": "true"},
-        "securePort": {"$": "8443", "@enabled": "true"},
-        "healthCheckUrl": "http://WKS-SOF-L011:8080/healthcheck",
-        "statusPageUrl": "http://WKS-SOF-L011:8080/status",
-        "homePageUrl": "http://WKS-SOF-L011:8080",
-        "dataCenterInfo": {
-            "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo", 
-            "name": "MyOwn"
-        },
-    }
-}
- */
 
 type AppRegistrationBody struct {
 	Instance InstanceDetails `json:"instance"`
@@ -99,33 +78,26 @@ func (erm EurekaRegistrationManager) DeRegisterFromServiceRegistry(configs Regis
 }
 
 func (erm EurekaRegistrationManager) getBodyForEureka(status string, configs RegistrationVariables) *AppRegistrationBody {
-	httpport := os.Getenv("GO_MICRO_SERVICE_PORT")
-	//set this as hostname for local environment
-	// hostname, err := os.Hostname()
-	// if err != nil{
-	// 	logger.Errorf("error","Enable to find hostname form OS, sending appname as host name")    	
-	// }
-	hostname := "<%= baseName %>"
+	httpport := app.GetVal("GO_MICRO_SERVICE_PORT")
+	hostname, _ := os.Hostname()
+	
+	env :=os.Getenv("GO_MICRO_PROFILE")
+	if(env=="prod"){
+		hostname = "<%= baseName %>"
+	}
 
 	ipAddress, err := helper.ExternalIP()
 	if err != nil{
 		logger.Errorf("Enable to find IP address form OS")    	
 	}
 
-    renewalStr, isset := os.LookupEnv("GO_MICRO_RENEWALINTERVALINSEC")
+    renewalStr := app.GetVal("GO_MICRO_RENEWALINTERVALINSEC")
 	var renewal int
-	if isset {
-	  renewal, _ = strconv.Atoi(renewalStr)
-	} else {
-	  renewal = 90
-	}
-	durationStr, isset := os.LookupEnv("GO_MICRO_DURATIONINSECS")
+	renewal, _ = strconv.Atoi(renewalStr)
+	
+	durationStr := app.GetVal("GO_MICRO_DURATIONINSECS")
   	var duration int
-  	if isset {
-    	duration, _ = strconv.Atoi(durationStr)
-  	} else {
-    	duration = 30
-  	}
+    duration, _ = strconv.Atoi(durationStr)
 
 	port := Port{httpport,"true"}
 	securePort := Port{"8443","false"}

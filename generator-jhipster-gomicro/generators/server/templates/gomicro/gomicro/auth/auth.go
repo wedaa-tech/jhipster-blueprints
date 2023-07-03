@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"github.com/Nerzal/gocloak/v13"
 	"encoding/json"
-	"os"
+	app "<%= packageName %>/config"
 )
 
 var (
@@ -18,10 +18,10 @@ var (
 )
 
 func SetClient() {
-	clientId =os.Getenv("GO_MICRO_CLIENT_ID")
-	clientSecret = os.Getenv("GO_MICRO_CLIENT_SECRET")
-	realmName =os.Getenv("GO_MICRO_REALM_NAME")
-	keycloakUrl=os.Getenv("GO_MICRO_KEYCLOAK_URL")
+	clientId =app.GetVal("GO_MICRO_CLIENT_ID")
+	clientSecret = app.GetVal("GO_MICRO_CLIENT_SECRET")
+	realmName =app.GetVal("GO_MICRO_REALM_NAME")
+	keycloakUrl=app.GetVal("GO_MICRO_KEYCLOAK_URL")
 	client = gocloak.NewClient(keycloakUrl)
 }
 
