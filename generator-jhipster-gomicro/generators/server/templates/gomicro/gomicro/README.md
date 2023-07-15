@@ -7,13 +7,25 @@
       cd go
       go mod tidy
   ---
-  + First run the postgress,keycloak and jhipster registry files also start rabbitmq server.
+  + First run the postgress or mongodb,keycloak and jhipster if rabbitmq for connection then rabbitmq registry files.
   ---
       cd docker
-      docker-compose -f  postgresql.yml up     
-      docker-compose -f  keycloak.yml up     
-      docker-compose -f  jhipster-registry.yml up   
-      docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+      <%_ if (postgresql){  _%>
+      docker-compose -f  postgresql.yml up
+      <%_ } _%>
+      <%_ if (mongodb){  _%>
+      docker-compose -f mongodb.yml up  
+      <%_ } _%>   
+      <%_ if (auth){  _%>
+      docker-compose -f  keycloak.yml up   
+      <%_ } _%>     
+	 <%_ if (eureka){  _%>
+      docker-compose -f  jhipster-registry.yml up  
+     <%_ } _%>   
+    <%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
+      docker-compose -f rabbitmq.yml up
+    <%_ } _%>   
+
   ---
 
 
@@ -28,6 +40,7 @@
     - GO_MICRO_REALM_NAME=jhipster
     + (DB_URL based on selection of Db)
     - GO_MICRO_DB_URL=postgresql://go@localhost:5433/postgres
+    - GO_MICRO_MONGODB_URL: mongodb://localhost:27017
     - GO_MICRO_MESSAGE_BROKER=amqp://guest:guest@localhost:5672
 ---
 
