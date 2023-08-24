@@ -1,0 +1,14 @@
+application {
+  config {
+    baseName client,
+    applicationType gateway,
+    packageName com.cmi.tic,
+    authenticationType oauth2,
+    databaseType no,
+    prodDatabaseType no,
+    serviceDiscoveryType no,
+    clientFramework angular,
+    serverPort 4200
+    blueprints [angular]
+  }
+}
