@@ -54,12 +54,19 @@ module.exports = {
   ],
 
   themeConfig: {
+    <%_ if (theme==="profile"){  _%>
+    colorMode: {
+      defaultMode: "light",
+      disableSwitch: true,
+    },
+    <%_ } _%>
     navbar: {
       title: '<%= applicationName %>',
       logo: {
         alt: 'company Logo',
         src: 'img/logo.png',
       },   
+      <%_ if (theme==="default"){  _%>
       items: [
        {
           type: 'doc',
@@ -74,7 +81,9 @@ module.exports = {
           className: 'header-github-link',
         },
       ],
+    <%_ } _%>
     },
+    <%_ if (theme==="default"){  _%>
     footer: {
       style: 'dark',
       links: [
@@ -97,5 +106,6 @@ module.exports = {
         },
       ],
     },
+    <%_ } _%>
   },
 };
