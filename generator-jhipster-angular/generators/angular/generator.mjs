@@ -191,8 +191,18 @@ export default class extends AngularGenerator {
           { src: "tsconfig.app.json", dest: "tsconfig.app.json" },
           { src: "tsconfig.json", dest: "tsconfig.json" },
           { src: "tsconfig.spec.json", dest: "tsconfig.spec.json" },
+          { src: "src/assets/", dest: "src/assets/" },
+          { src: "src/app/", dest: "src/app/" },
+          { src: "environment.ts", dest: "environment.ts" },
+          { src: "environment.production.ts", dest: "environment.production.ts" },
         ];
-        const conditionalTemplates = [];
+        const conditionalTemplates = [
+          { 
+            condition: this.oauth2,
+            src:  "src/app/auth/",
+            dest: "src/app/auth/"
+          },
+        ];
         templatePaths.forEach(({ src, dest }) => {
           this.fs.copyTpl(
             this.templatePath(src),
