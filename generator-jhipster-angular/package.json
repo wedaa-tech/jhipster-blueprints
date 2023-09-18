@@ -28,8 +28,9 @@
     "update-snapshot": "npm run mocha -- --no-parallel --updateSnapshot"
   },
   "dependencies": {
+    "angular-auth-oidc-client": "^16.0.1",
     "chalk": "4.1.2",
-    "generator-jhipster": "file:/home/rakesh/WeDaa/generator-jhipster",
+    "generator-jhipster": "file:/usr/src/app/generator-jhipster",
     "yosay": "^2.0.2"
   },
   "devDependencies": {
