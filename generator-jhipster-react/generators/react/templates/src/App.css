@@ -147,6 +147,15 @@ nav.navbar .navbar-nav a.nav-link.navbar-link.active {
   font-weight: 500;
 }
 
+.swagger {
+  background-color: #fff;
+  color: #000; 
+  font-family: Arial, sans-serif;
+  font-weight: 500; 
+  margin-top: 75px;
+  padding: 2px 20px;
+}
+
 .sub-menu-link {
   display: flex;
   align-items: center;
