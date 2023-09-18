@@ -11,19 +11,23 @@ import { Subscription } from 'rxjs';
 })
 export default class NavbarComponent implements OnInit {
   isNavbarCollapsed = true;
+  <%_ if(oauth2)  { _%>
   isAuthenticated: boolean = false;
   private isAuthenticatedSubscription!: Subscription;
 
   constructor(private router: Router, public oidcSecurityService: OidcSecurityService) {
     this.isAuthenticated = false; // Initialize as false initially
   }
+  <%_ } _%>  
 
   ngOnInit(): void {
+    <%_ if(oauth2)  { _%>
     this.isAuthenticatedSubscription = this.oidcSecurityService.isAuthenticated$.subscribe({
       next: result => {
         this.isAuthenticated = result.isAuthenticated;
       },
     });
+    <%_ } _%>  
     window.addEventListener('scroll', this.onScroll);
   }
 
@@ -41,11 +45,14 @@ export default class NavbarComponent implements OnInit {
   public activeLink = 'home';
   public scrolled = false;
   public isSubMenuOpen = false;
+  <%_ if(oauth2)  { _%>
   public isloggedIn = false;
+  <%_ } _%>  
 
   ngOnDestroy(): void {
+<%_ if(oauth2)  { _%>
     this.isAuthenticatedSubscription.unsubscribe();
-
+<%_ } _%>  
     window.removeEventListener('scroll', this.onScroll);
   }
 
@@ -61,6 +68,7 @@ export default class NavbarComponent implements OnInit {
     window.open(link, '_blank');
   }
 
+  <%_ if(oauth2)  { _%>
   login() {
     this.oidcSecurityService.authorize();
   }
@@ -71,4 +79,6 @@ export default class NavbarComponent implements OnInit {
       .subscribe((result) => console.log(result));
     window.location.href = environment.projectUrl; 
   }
+  <%_ } _%> 
+
 }

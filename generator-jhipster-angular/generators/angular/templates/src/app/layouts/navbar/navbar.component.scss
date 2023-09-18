@@ -19,7 +19,11 @@
 }
 
 .social-icon {
-  margin-right: 15px;
+  <%_ if(oauth2)  { _%>
+    margin-right: 15px;
+  <%_ } else { _%>  
+  margin-right:  450px;
+  <%_ } _%>  
 }
 
 p,

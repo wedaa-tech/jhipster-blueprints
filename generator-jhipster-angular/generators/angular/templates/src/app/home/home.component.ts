@@ -34,10 +34,6 @@ export default class HomeComponent implements OnInit, OnDestroy {
     window.open(environment.wedaaDocs, '_blank');
   }
 
-  // login(): void {
-  //   this.loginService.login();
-  // }
-
   private destroy$ = new Subject<void>();
 
   ngOnDestroy(): void {

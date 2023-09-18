@@ -23,6 +23,7 @@
               </svg>
             </a>
           </span>
+        <%_ if(oauth2)  { _%>
           <div *ngIf="!isAuthenticated">
             <button class="vvd" (click)="login()" id="login" data-cy="login">
               <span>Sign In</span>
@@ -33,6 +34,7 @@
               <span>Sign Out</span>
             </button>
           </div>
+        <%_ } _%>  
         </span>
       </div>
     </div>
