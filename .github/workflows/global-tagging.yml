@@ -23,6 +23,7 @@ jobs:
             LATEST_TAG="0.0.0"
           fi
           echo "::set-output name=latest_tag::$LATEST_TAG"
+          
 
       - name: Create Tag
         run: |
