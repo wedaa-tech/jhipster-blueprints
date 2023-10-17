@@ -12,6 +12,7 @@ export function createTestHelpers(options = {}) {
   return createHelpers({ ...options, createEnv: EnvironmentBuilder.createEnv });
 }
 
+
 export const helpers = createTestHelpers();
 
 export const lookups = { packagePaths: [packageRoot, jhipsterPath], lookups: ['generators'] };
