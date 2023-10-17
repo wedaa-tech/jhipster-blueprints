@@ -47,9 +47,13 @@ jobs:
         run: |
           folder=$(echo ${{ steps.changed_folder.outputs.stdout }})
           if [ "$folder" != "root" ]; then
-            pushd "$folder"
-            npm version patch -m "Bump version to %s [skip ci]"
-            popd
+            if [ -d "$folder" ] && [ -f "$folder/package.json" ]; then
+              pushd "$folder"
+              npm version patch -m "Bump version to %s [skip ci]"
+              popd
+            else
+              echo "Folder '$folder' does not exist or does not contain a 'package.json' file."
+            fi
           fi
         shell: bash
 
