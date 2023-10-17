@@ -24,7 +24,7 @@ jobs:
       - name: Determine Changed Folder
         id: changed_folder
         run: |
-          changed_files=$(git diff --name-only ${{ github.base_ref }}..${{ github.ref }})
+          changed_folders=$(git diff --dirstat=files,0 ${{ github.base_ref }}..${{ github.ref }} | awk '{print $2}')
           for file in $changed_files; do
             if [[ $file == "docusaurus-generator/"* ]]; then
               echo "docusaurus-generator"
