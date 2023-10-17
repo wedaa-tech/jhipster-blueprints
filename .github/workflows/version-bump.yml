@@ -40,17 +40,23 @@ jobs:
               fi
           done
           for dir in "${top_level_dirs[@]}"; do
-            echo "$dir"
+            echo "Changed directory: $dir"
           done
+          echo "Changed directories: ${top_level_dirs[@]}"
+          echo "::set-output name=changed_dirs::${top_level_dirs[@]}"
         shell: bash
 
       - name: Bump package version in specific folders
         run: |
-          directories=(${{ steps.changed_folders.outputs.stdout }})
+          directories=(${{ steps.changed_folders.outputs.changed_dirs }})
           for folder in "${directories[@]}"; do
             if [ "$folder" != ".github" ]; then
               pushd "$folder"
-              npm version patch -m "Bump version to %s [skip ci]"
+              echo "Bumping package version in $folder"
+              # Bump the version and capture the new version number
+              new_version=$(npm version patch)
+              # Commit the changes with the version number in the commit message
+              git commit -am "Bump version to $new_version [skip ci]"
               popd
             fi
           done
