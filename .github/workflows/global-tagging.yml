@@ -3,7 +3,7 @@ name: Create Tag on Push
 on:
   push:
     branches:
-      - global-tags
+      - main
 
 jobs:
   create_tag:
@@ -39,5 +39,6 @@ jobs:
           # Create the new tag
           git tag $NEW_TAG
           git push origin $NEW_TAG
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
