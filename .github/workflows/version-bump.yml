@@ -23,14 +23,19 @@ jobs:
       - name: Determine Changed Folders
         id: changed_folders
         run: |
-          # Get the list of changed files
-          changed_files=$(git log --name-only --pretty=format: --since="$(git log -n 1 --format=%at)" | sort -u)
+          # Get the branch from which the current branch was merged
+          merge_base=$(git merge-base test HEAD)
 
-          # Extract the top-level directories from the list of changed files
-          directories=$(echo "$changed_files" | awk -F/ '{print $1}' | sort -u)
+          # Get the list of changed directories between the merge base and the current branch
+          changed_folders=$(git diff --dirstat=files,0 $merge_base HEAD | awk '{print $2}')
+
+          # Filter out top-level directories
+          top_level_directories=($(echo "$changed_folders" | awk -F/ '{print $1}' | sort -u))
 
           # Output the top-level directories
-          echo "$directories"
+          for dir in "${top_level_directories[@]}"; do
+            echo "$dir"
+          done
 
         shell: bash
 

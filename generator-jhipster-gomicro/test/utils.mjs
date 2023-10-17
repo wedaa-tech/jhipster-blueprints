@@ -13,6 +13,7 @@ export function createTestHelpers(options = {}) {
 
 export const helpers = createTestHelpers();
 
+
 export const lookups = [
   { packagePaths: [jhipsterPath], lookups: ["dist/generators"] },
   { packagePaths: [packageRoot], lookups: ["generators"] },
