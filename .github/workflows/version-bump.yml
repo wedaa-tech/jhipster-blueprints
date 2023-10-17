@@ -27,7 +27,7 @@ jobs:
           last_commit=$(git log -n 1 --pretty=format:"%H")
 
           # Get a list of changed files in the last commit
-          changed_files=$(git diff --name-only $last_commit^ $last_commit)
+          changed_files=$(git diff --name-only $last_commit^..$last_commit)
 
           # Extract the top-level directories from the changed files
           top_level_dirs=()
