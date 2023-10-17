@@ -23,34 +23,37 @@ jobs:
       - name: Determine Changed Folders
         id: changed_folders
         run: |
-          # Get the branch from which the current branch was merged
-          merge_base=$(git merge-base test HEAD)
+          # Get the last commit hash
+          last_commit=$(git log -n 1 --pretty=format:"%H")
 
-          # Get the list of changed directories between the merge base and the current branch
-          changed_folders=$(git diff --dirstat=files,0 $merge_base HEAD | awk '{print $2}')
+          # Get a list of changed files in the last commit
+          changed_files=$(git diff --name-only $last_commit^ $last_commit)
 
-          # Filter out top-level directories
-          top_level_directories=($(echo "$changed_folders" | awk -F/ '{print $1}' | sort -u))
-
-          # Output the top-level directories
-          for dir in "${top_level_directories[@]}"; do
+          # Extract the top-level directories from the changed files
+          top_level_dirs=()
+          for file in $changed_files; do
+              dir=$(dirname "$file")
+              top_level_dir=$(echo "$dir" | cut -d'/' -f1)
+              if ! [[ " ${top_level_dirs[*]} " == *" $top_level_dir "* ]]; then
+                  top_level_dirs+=("$top_level_dir")
+              fi
+          done
+          for dir in "${top_level_dirs[@]}"; do
             echo "$dir"
           done
-
         shell: bash
 
-      - name: Bump package version in the specific folder
+      - name: Bump package version in specific folders
         run: |
-          folder=$(echo ${{ steps.changed_folders.outputs.stdout }})
-          if [ "$folder" != "" ]; then
-            pushd "$folder"
-            npm version patch -m "Bump version to %s [skip ci]"
-            popd
-          fi
+          directories=(${{ steps.changed_folders.outputs.stdout }})
+          for folder in "${directories[@]}"; do
+            if [ "$folder" != ".github" ]; then
+              pushd "$folder"
+              npm version patch -m "Bump version to %s [skip ci]"
+              popd
+            fi
+          done
         shell: bash
-
-      # - name: Bump package version
-      #   run: npm version patch -m "Bump version to %s [skip ci]"
 
       - name: Push vesrion bump to the current branch
         uses: ad-m/github-push-action@v0.6.0
