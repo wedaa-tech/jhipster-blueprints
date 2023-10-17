@@ -13,8 +13,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-          # ref: ${{ github.event.before }}
-
+          ref: test
+          
       - name: Setup GIT
         run: |
           git config --global user.email "engineering@wedaa.tech"
