@@ -1,0 +1,64 @@
+name: Version update
+
+on:
+  push:
+    branches:
+      - workflow/tags
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup GIT
+        run: |
+          git config --global user.email "engineering@wedaa.tech"
+          git config --global user.name "engineering-wedaa"
+
+
+      - name: Determine Changed Folder
+        id: changed_folder
+        run: |
+          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          for file in $changed_files; do
+            if [[ $file == "docusaurus-generator/"* ]]; then
+              echo "docusaurus-generator"
+              exit 0
+            elif [[ $file == "generator-jhipster-angular/"* ]]; then
+              echo "generator-jhipster-angular"
+              exit 0
+            elif [[ $file == "generator-jhipster-gomicro/"* ]]; then
+              echo "generator-jhipster-gomicro"
+              exit 0
+            elif [[ $file == "generator-jhipster-react/"* ]]; then
+              echo "generator-jhipster-react"
+              exit 0
+            fi
+          done
+          echo "root"
+        shell: bash
+
+      - name: Bump package version in the specific folder
+        run: |
+          folder=$(echo ${{ steps.changed_folder.outputs.stdout }})
+          if [ "$folder" != "root" ]; then
+            pushd "$folder"
+            npm version patch -m "Bump version to %s [skip ci]"
+            popd
+          fi
+        shell: bash
+
+      # - name: Bump package version
+      #   run: npm version patch -m "Bump version to %s [skip ci]"
+
+      - name: Push vesrion bump to the current branch
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          branch: main # ${{ github.head_ref }}
+          force: true
+ 
