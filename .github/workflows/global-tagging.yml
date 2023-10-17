@@ -1,0 +1,42 @@
+name: Create Tag on Push
+
+on:
+  push:
+    branches:
+      - global-tags
+
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Determine Latest Tag
+        id: latest_tag
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG="0.0.0"
+          fi
+          echo "::set-output name=latest_tag::$LATEST_TAG"
+
+      - name: Create Tag
+        run: |
+          # Get the latest tag
+          LATEST_TAG="${{ steps.latest_tag.outputs.latest_tag }}"
+          # Increment the tag
+          IFS="." read -a tag_parts <<< "$LATEST_TAG"
+          major="${tag_parts[0]}"
+          minor="${tag_parts[1]}"
+          patch="${tag_parts[2]}"
+          patch=$((patch + 1))
+          NEW_TAG="$major.$minor.$patch"
+
+          # Create the new tag
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
