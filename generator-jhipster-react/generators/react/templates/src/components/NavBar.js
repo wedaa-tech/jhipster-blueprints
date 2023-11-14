@@ -84,6 +84,15 @@ export const NavBar = () => {
                   Swagger <BiChevronDown />
               </Nav.Link>  
             <%_ } _%>  
+            <%_  if( servicesWithOutDB.length > 0 ) { _%>
+              <Nav.Link
+                href="/ping"
+                className={activeLink === 'ping' ? 'active navbar-link' : 'navbar-link'}
+                onClick={() => onUpdateActiveLink('ping')}
+              >
+                Ping
+              </Nav.Link>
+            <%_ } _%>  
               <Nav.Link href="/docs" 
                 className={activeLink === 'projects' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('projects')}>
                   Docs

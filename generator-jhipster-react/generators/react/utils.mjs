@@ -87,3 +87,21 @@ export function processApiServersforClinet() {
   });
   return apiServers;
 }
+
+export function loadServicesWithAndWithOutDB() {
+  let communications = loadCommunicationConfigs.call(this);
+  let appConfigs = loadAppConfigs.call(this);
+  let servicesWithOutDB = [];
+  let servicesWithDB = [];
+
+  appConfigs.forEach(appConfig => {
+    const { baseName, databaseType } = appConfig['generator-jhipster'];
+    const matchingCommunication = communications.find(comm => comm.server === baseName && comm.client === this.baseName);
+    if (matchingCommunication && databaseType === 'no') {
+      servicesWithOutDB.push(baseName);
+    } else if (matchingCommunication&& databaseType !== 'no'){
+      servicesWithDB.push(baseName);
+    }
+  });
+  return {servicesWithDB, servicesWithOutDB};
+}
