@@ -9,6 +9,9 @@ import DocsPage from './components/Docs';
 import SwaggerUI from "swagger-ui-react";
 import "swagger-ui-react/swagger-ui.css";
 <%_ } _%> 
+<%_  if( servicesWithOutDB.length > 0 ) { _%>
+import Ping from './components/Ping';
+<%_ } _%> 
 <%_ if (oauth2) { _%>
 import PrivateRoute from './config/auth/privateRoute';
 <%_ } _%> 
@@ -44,6 +47,16 @@ function App() {
             <%_ } _%> 
           } />
           <%_ }) _%>
+        <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
+          <Route
+            path="/ping"
+            element={
+              <div className="component">
+              <Ping />
+              </div>
+            }
+          />
+        <%_ } _%> 
         </Routes>
       </Router>
     </div>
