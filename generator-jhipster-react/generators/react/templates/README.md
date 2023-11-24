@@ -1,75 +1,65 @@
-# Getting Started with Create React App
+# <%= baseName %> prototype
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This prototype was generated using WeDAA, you can find documentation and help at [https://www.wedaa.tech/docs/getting-started](https://www.wedaa.tech/docs/getting-started)
 
-## Available Scripts
+## Prerequisites
 
-In the project directory, you can run:
+- Node version >= 18
+- npm version >= 9.6
+- docker version >= 24
 
-### `npm start`
+## Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+This project is based on standard React Application, so it follows the same project structure.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+├── Dockerfile (for packaging the application as docker image)
+├── README.md (Project documentation)
+├── comm.yo-rc.json (generator configuration file for communications)
+├── nginx.conf (nginx server configuration)
+├── package.json (npm configuration)
+├── public/
+├── docker/ (contains docker compose files for external components based on architecture design)
+└── src
+    ├── App.css
+    ├── App.js (Main React Component)
+    ├── assets/ (Static files)
+    ├── components/ (react application components)
+    ├── config/ (contains integration code for other components)
+```
+<%_ if (oauth2 || eureka) { _%>
+## Dependencies
 
-### `npm test`
+This application is configured to work with few external components.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Docker compose files are provided for the same to get started quickly.
 
-### `npm run build`
+Component details:
+<%_ if (oauth2) { _%>
+- Keycloak as Identity Management:
+  
+  Run keycloak as docker container - `docker compose -f docker/keycloak.yml up -d`
+<%_ } _%>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<%_ if (eureka) { _%>
+- Eureka Service Discovery:
+<%_ } _%>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+On launch, <%= baseName %> will refuse to start if it is not able to connect to any of the above component(s).
+<%_ } _%>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Get Started
 
-### `npm run eject`
+Install required dependencies: `npm install`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Run the prototype locally in development mode: `npm start`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Open [http://localhost:<%= serverPort %>](http://localhost:<%= serverPort %>) to view it in your browser.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The page will reload when you make changes.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Containerization
 
-## Learn More
+Build the docker image: `docker build -t <%= baseName %>:latest .`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-
-# How to run docker file ?
-> docker build -t raxkumar/react-app-test . 
-> docker run -d -p 3000:80 raxkumar/react-app-test
+Start the container: `docker run -d -p <%= serverPort %>:80 <%= baseName %>:latest`

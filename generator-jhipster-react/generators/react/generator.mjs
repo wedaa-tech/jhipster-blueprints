@@ -209,6 +209,16 @@ export default class extends ReactGenerator {
             src:  "src/config/auth/",
             dest: "src/config/auth/"
           },
+          { 
+            condition: this.oauth2,
+            src:  "docker/realm-config/",
+            dest: "docker/realm-config/"
+          },
+          { 
+            condition: this.oauth2,
+            src:  "docker/keycloak.yml",
+            dest: "docker/keycloak.yml"
+          },
         ];
         templatePaths.forEach(({ src, dest }) => {
           this.fs.copyTpl(
