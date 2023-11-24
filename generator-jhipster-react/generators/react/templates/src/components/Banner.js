@@ -11,7 +11,7 @@ export const Banner = () => {
   const [text, setText] = useState('');
   const [delta, setDelta] = useState(300 - Math.random() * 100);
   const [index, setIndex] = useState(1);
-  const toRotate = [ "React Application","Generated via WeDaa" ];
+  const toRotate = [ "React Application","Generated via WeDAA" ];
   const period = 2000;
 
   useEffect(() => {
@@ -56,12 +56,12 @@ export const Banner = () => {
               {({ isVisible }) =>
               <div className={isVisible ? "animate__animated animate__fadeIn" : ""}>
                 <span className="tagline">Welcome to {process.env.REACT_APP_PROJECT_NAME}</span>
-                <h1><span className="txt-rotate" dataPeriod="1000" data-rotate='[ "React Application","Generated via WeDaa" ]'><span className="wrap">{text}</span></span></h1>
+                <h1><span className="txt-rotate" dataPeriod="1000" data-rotate='[ "React Application","Generated via WeDAA" ]'><span className="wrap">{text}</span></span></h1>
                   <p>
                   Ready to dive into React? 
                   <br></br>
                   <br></br>
-                  WeDaa gets you started fast, while offering flexibility for your creative touch.
+                  WeDAA gets you started fast, while offering flexibility for your creative touch.
                   Explore organized code with user-friendly docs, customize effortlessly, and follow best practices effortlessly for a winning app.
                   With quick iterations and a supportive community, your coding journey begins here. Let's build something amazing together!
                   </p>
