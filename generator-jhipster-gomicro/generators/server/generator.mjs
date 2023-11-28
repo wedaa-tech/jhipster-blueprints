@@ -167,7 +167,8 @@ export default class extends ServerGenerator {
           var restServer = [],
             restClient,
             rabbitmqServer = [],
-            rabbitmqClient = [];
+            rabbitmqClient = [],
+            rabbitmq = false;
 
           for (var options of matchingScenarios) {
             if (options.framework === 'rest-api') {
@@ -178,6 +179,7 @@ export default class extends ServerGenerator {
                 restClient = options.client;
               }
             } else if (options.framework === 'rabbitmq') {
+              rabbitmq = true;
               if (options.server) {
                 rabbitmqServer.push(options.server);
               }
@@ -200,15 +202,14 @@ export default class extends ServerGenerator {
           restClient: restClient,
           rabbitmqServer: rabbitmqServer,
           rabbitmqClient: rabbitmqClient,
+          rabbitmq: rabbitmq,
         };
 
         const templatePaths = [
-          { src: 'docker', dest: 'docker' },
           { src: 'proto', dest: 'proto' },
           { src: 'go.mod', dest: 'go.mod' },
           { src: 'main.go', dest: 'main.go' },
           { src: 'Dockerfile', dest: 'Dockerfile' },
-          { src: 'Makefile', dest: 'Makefile' },
           { src: 'README.md', dest: 'README.md' },
           { src: 'config', dest: 'config' },
           { src: 'resources', dest: 'resources' },
@@ -216,10 +217,15 @@ export default class extends ServerGenerator {
         ];
         const conditionalTemplates = [
           { condition: this.auth, src: 'auth', dest: 'auth' },
+          { condition: this.auth, src: 'docker/realm-config', dest: 'docker/realm-config' },
+          { condition: this.auth, src: 'docker/keycloak.yml', dest: 'docker/keycloak.yml' },
           { condition: this.postgress, src: 'handler/db.go', dest: 'handler/db.go' },
-          { condition: this.mongodb, src: 'handler/mongodb.go', dest: 'handler/mongodb.go' },
           { condition: this.postgress, src: 'db/config.go', dest: 'db/config.go' },
+          { condition: this.postgress, src: 'migrate', dest: 'migrate' },
+          { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' },
+          { condition: this.mongodb, src: 'handler/mongodb.go', dest: 'handler/mongodb.go' },
           { condition: this.mongodb, src: 'db/mongoconfig.go', dest: 'db/mongoconfig.go' },
+          { condition: this.mongodb, src: 'docker/mongodb.yml', dest: 'docker/mongodb.yml' },
           { condition: this.eureka, src: 'eurekaregistry/helper', dest: 'eurekaregistry/helper' },
           {
             condition: this.eureka,
@@ -236,13 +242,15 @@ export default class extends ServerGenerator {
             src: 'eurekaregistry/EurekaRegistrationManager.go',
             dest: 'eurekaregistry/EurekaRegistrationManager.go',
           },
+          { condition: this.eureka, src: 'docker/central-server-config', dest: 'docker/central-server-config' },
+          { condition: this.eureka, src: 'docker/jhipster-registry.yml', dest: 'docker/jhipster-registry.yml' },
           { condition: this.rabbitmq, src: 'rabbitmq', dest: 'rabbitmq' },
+          { condition: this.rabbitmq, src: 'docker/rabbitmq.yml', dest: 'docker/rabbitmq.yml' },
           {
             condition: restServer?.length,
             src: 'eurekaregistry/ServiceDiscovery.go',
             dest: 'eurekaregistry/ServiceDiscovery.go',
           },
-          { condition: this.postgress, src: 'migrate', dest: 'migrate' },
         ];
         templatePaths.forEach(({ src, dest }) => {
           this.fs.copyTpl(this.templatePath(src), this.destinationPath(dest), templateVariables);

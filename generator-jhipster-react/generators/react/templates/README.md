@@ -1,6 +1,6 @@
 # <%= baseName %> prototype
 
-This prototype was generated using WeDAA, you can find documentation and help at [https://www.wedaa.tech/docs/getting-started](https://www.wedaa.tech/docs/getting-started)
+This is a react application prototype, generated using WeDAA. You can find documentation and help at [WeDAA Docs](https://www.wedaa.tech/docs/introduction/what-is-wedaa/)
 
 ## Prerequisites
 
@@ -13,19 +13,21 @@ This prototype was generated using WeDAA, you can find documentation and help at
 This project is based on standard React Application, so it follows the same project structure.
 
 ```
-├── Dockerfile (for packaging the application as docker image)
-├── README.md (Project documentation)
-├── comm.yo-rc.json (generator configuration file for communications)
-├── nginx.conf (nginx server configuration)
-├── package.json (npm configuration)
 ├── public/
 ├── docker/ (contains docker compose files for external components based on architecture design)
-└── src
+├── src
     ├── App.css
     ├── App.js (Main React Component)
     ├── assets/ (Static files)
     ├── components/ (react application components)
+    <%_ if (oauth2) { _%>
     ├── config/ (contains integration code for other components)
+    <%_ } _%>
+├── Dockerfile (for packaging the application as docker image)
+├── README.md (Project documentation)
+├── comm.yo-rc.json (generator configuration file for communications)
+├── nginx.conf (nginx server configuration)
+└── package.json (npm configuration)
 ```
 <%_ if (oauth2 || eureka) { _%>
 ## Dependencies

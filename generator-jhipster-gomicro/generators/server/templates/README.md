@@ -1,211 +1,85 @@
-# Go Application
+# <%= baseName %> prototype
 
-Prerequisites: _Go, Node, Docker_
+This is a go-micro prototype generated using WeDAA, you can find documentation and help at [WeDAA Docs](https://www.wedaa.tech/docs/introduction/what-is-wedaa/)
 
-Installation: `npm install -g generator-jhipster`
+## Prerequisites
 
-Link:
+- go version >= 1.20
 
-`git clone https://github.com/tic-oss/jhipster-blueprints.git `
-
-`cd generator-jhipster-gomicro`
-
-`npm link generator-jhipster-gomicro`
-
-A Sample microservices application can be generated using the provided jdl: `jhipster jdl reminder.jdl`
-
-reminder.jdl
-
----
-
-<pre>
-   application {
-    config {
-      baseName gomicro,
-      applicationType microservice,
-      packageName com.cmi.tic,
-      authenticationType oauth2,
-      databaseType sql,
-      prodDatabaseType postgresql,
-      devDatabaseType postgresql,
-      serviceDiscoveryType eureka,
-      blueprints [gomicro],
-      serverPort 9002,
-    } 
-}
- </pre>
-
----
-
-Below is the directory structure once application code is generated.
+## Project Structure
 
 ```
-.
-├── be1 (backend microservice 1)
-│   ├── README.md
-    <%_ if (auth){  _%>
-│   ├── auth
-    <%_ } _%>
-│   ├── config
-│   ├── controllers
-    <%_ if (postgresql || mongodb){  _%>
-│   ├── db
-    <%_ } _%>
-    <%_ if (eureka){  _%>
-│   ├── eurekaregistry
-    <%_ } _%>
-    <%_ if (postgresql || mongodb){  _%>
-│   ├── handler
-    <%_ } _%>
-│   ├── migrate
-│   ├── proto
-│   ├── resources
-    <%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
-│   ├── rabbitmq
-    <%_ } _%>
-│   ├── main.go
-|   ├── go.mod
-|   ├── Dockerfile
-|   ├── docker-compose (docker compose for all microservices and their dependencies)
-│   ├── central-server-config
-│   ├── docker-compose.yml
-└── └── realm-config
+<%_ if (auth) { _%>
+├── auth/ (IdP configuration for keycloak)
+<%_ } _%>
+├── config/ (configuration properties loader)
+├── controllers/ (api controllers)
+<%_ if (postgresql || mongodb) { _%>
+├── db/ (DB connection configuration)
+<%_ } _%>
+├── docker/ (contains docker compose files for external components based on architecture design)
+<%_ if (eureka) { _%>
+├── eurekaregistry/ (configuration for eureka service registry)
+<%_ } _%>
+<%_ if (postgresql || mongodb) { _%>
+├── handler/ (DB handler methods)
+<%_ } _%>
+<%_ if (postgresql) { _%>
+├── migrate/ (database schema change management)
+<%_ } _%>
+<%_ if (postgresql || mongodb) { _%>
+├── proto/ (proto files supporting DB models)
+<%_ } _%>
+<%_ if (rabbitmq) { _%>
+├── rabbitmq/ (message broker configuration)
+<%_ } _%>
+├── resources/ (configuration properties)
+├── Dockerfile (for packaging the application as docker image)
+├── README.md (Project documentation)
+├── comm.yo-rc.json (generator configuration file for communications)
+├── go.mod
+└── main.go
 ```
 
-The generated application also includes keycloak, jhipster registry (based on eureka), postgres mongodb rabbitmq server specific to each service.
+<%_ if (auth || eureka || postgresql || mongodb || rabbitmq) { _%>
+## Dependencies
 
-## Intro on the services provided
+This application is configured to work with external component(s).
 
-    <%_ if (auth){  _%>
-    - auth - The authorization is supported by  [Keycloak](https://www.keycloak.org).Here The token is fetched from the header and retrospection is done for the validity of the token if the token is valid the api is hit on the contrary an error is returned.
-    <%_ } _%>
+Docker compose files are provided for the same to get started quickly.
 
-    - config - Next for the config there are multiple environments available initially the app.yml configuration is loaded then based on the env the particular env specific file is loaded and finally the env variables are overided thus on the same structure multiple values will be overriden.
+Component details:
+<%_ if (auth) { _%>
+- Keycloak as Identity Management: `docker compose -f docker/keycloak.yml up -d`
+<%_ } _%>
+<%_ if (eureka) { _%>
+- Eureka Service Discovery: `docker compose -f docker/jhipster-registry.yml up -d`
+<%_ } _%>
+<%_ if (postgresql) { _%>
+- Postgresql DB: `docker compose -f docker/postgresql.yml up -d`
+<%_ } _%>
+<%_ if (mongodb) { _%>
+- mongoDB: `docker compose -f docker/mongodb.yml up -d`
+<%_ } _%>
+<%_ if (rabbitmq) { _%>
+- RabbitMQ message broker: `docker compose -f docker/rabbitmq.yml up -d`
+<%_ } _%>
 
-    - resources - Here the app.yml and the respective config files are stored.
+On launch, <%= baseName %> will refuse to start if it is not able to connect to any of the above component(s).
+<%_ } _%>
 
-    - controllers -  Implemented by [mux](https://github.com/gorilla/mux).Here the list of api calls and their respective functionalities are written where whena specific api hit what function must be called.
+## Get Started
 
-    <%_ if (postgresql || mongodb){  _%>
-    - db - Here the link is made to the database and the application and specific client is returned as an output.
-    <%_ } _%>
+Install required dependencies: `go mod tidy`
 
-    <%_ if (eureka){  _%>
-    - eureka registry - This file contains the code for Registering the service with eureka Service registry with the configurations.
-    <%_ } _%>
+Run the prototype locally: `go run .`
 
-    <%_ if (postgresql || mongodb){  _%>
-    - handler - Here the logic for the api calls of the controller is present for the db queries,CRUD operations.
-    <%_ } _%>
+Open [http://localhost:<%= serverPort %>/hello](http://localhost:<%= serverPort %>/hello) to view it in your browser.
 
-    - migrate - Implemented by [gomigrate](https://github.com/golang-migrate/migrate).This is for the database versioning in golang.Here the database is created with the application basename and the scripts are run to create table along with schema and insert few data.
+The page will reload when you make changes.
 
-    <%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
-    - rabbitmq - This file consists of files of consumer and producer for asynchronous communication i.e, for sending data and recieving data from the queue.
-    <%_ } _%>
+## Containerization
 
-    - Dockerfile - To build an image of the microservice.
+Build the docker image: `docker build -t <%= baseName %>:latest .`
 
-    - main.go - The source file from where the application starts.
-
-## To run the golang application generated
-
-- Build the go application
-
----
-
-      cd go
-      go mod tidy
-
----
-
-- First run the postgress or mongodb,keycloak and jhipster if rabbitmq for connection then rabbitmq registry files.
-
----
-
-      cd docker
-      <%_ if (postgresql){  _%>
-      docker-compose -f  postgresql.yml up
-      <%_ } _%>
-      <%_ if (mongodb){  _%>
-      docker-compose -f mongodb.yml up
-      <%_ } _%>
-      <%_ if (auth){  _%>
-      docker-compose -f  keycloak.yml up
-      <%_ } _%>
-     <%_ if (eureka){  _%>
-      docker-compose -f  jhipster-registry.yml up
-     <%_ } _%>
-    <%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
-      docker-compose -f rabbitmq.yml up
-    <%_ } _%>
-
----
-
-- Now get back to the root directory of go and start the golang service
-
----
-
-      go run .
-
----
-
-## Build an image
-
----
-
-    docker build -t image_name .
-
----
-
-### Run by passing values
-
-- docker run -it --network="host" -p <port_number>:<port_number> -e db_url=postgresql://go@localhost:5433/postgres image_name
-
-### Run by passing 3 ENV values
-
-```
-docker run -it --network="host" -p <port_number>:<port_number> \
-
--e DB_URL=postgresql://go@localhost:5433/postgres \
-
--e KEYCLOAK_URL=http://localhost:9080/realms/jhipster \
-
--e SERVICE_REGISTRY_URL=http://admin:admin@localhost:8761/eureka/apps/ \
-
-be
-```
-
-### Code Formatting
-
-- Gofmt formats Go programs. It uses tabs for indentation and blanks for alignment. Alignment assumes that an editor is using a fixed-width font.
-
-Usage:
-
-```
- gofmt [flags] [path ...]
-```
-
-- Flags
-
-  - d - Do not print reformatted sources to standard output.
-    If a file's formatting is different than gofmt's, print diffs
-    to standard output.
-
-  - e - Print all (including spurious) errors.
-
-  - l - Do not print reformatted sources to standard output.
-    If a file's formatting is different from gofmt's, print its name
-    to standard output.
-
-  - r rule - Apply the rewrite rule to the source before reformatting.
-
-  - s - Try to simplify code (after applying the rewrite rule, if any).
-
-  - w - Do not print reformatted sources to standard output.
-
-- For formatting whole directory
-
-  ```
-    gofmt  .
-  ```
+Start the container: `docker run -d -p <%= serverPort %>:<%= serverPort %> <%= baseName %>:latest`
