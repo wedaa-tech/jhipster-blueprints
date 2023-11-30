@@ -188,6 +188,8 @@ export default class extends AngularGenerator {
           { src: ".gitignore", dest: ".gitignore" },
           { src: "package.json", dest: "package.json" },
           { src: "README.md", dest: "README.md" },
+          { src: "Dockerfile", dest: "Dockerfile" },
+          { src: "nginx.conf", dest: "nginx.conf" },
           { src: "tsconfig.app.json", dest: "tsconfig.app.json" },
           { src: "tsconfig.json", dest: "tsconfig.json" },
           { src: "tsconfig.spec.json", dest: "tsconfig.spec.json" },
@@ -202,6 +204,16 @@ export default class extends AngularGenerator {
             condition:  this.oauth2,
             src:  "src/app/auth/",
             dest: "src/app/auth/"
+          },
+          { 
+            condition: this.oauth2,
+            src:  "docker/realm-config/",
+            dest: "docker/realm-config/"
+          },
+          { 
+            condition: this.oauth2,
+            src:  "docker/keycloak.yml",
+            dest: "docker/keycloak.yml"
           },
         ];
         templatePaths.forEach(({ src, dest }) => {

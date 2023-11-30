@@ -2,7 +2,7 @@ export const environment = {
   projectName: '<%= baseName %>',
   projectUrl: 'http://localhost:4200',
   
-  wedaaDocs: 'https://www.wedaa.tech/docs/',
+  wedaaDocs: 'https://www.wedaa.tech/docs/introduction/what-is-wedaa',
   wedaaGithub: 'https://github.com/wedaa-tech',
   
 <%_ if(oauth2)  { _%>
