@@ -1,27 +1,80 @@
-# Abcd
+# <%= baseName %> prototype
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.8.
+This is an angular application prototype, generated using WeDAA. You can find documentation and help at [WeDAA Docs](https://www.wedaa.tech/docs/introduction/what-is-wedaa/)
 
-## Development server
+## Prerequisites
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Node version >= 18
+- npm version >= 9.6
+- docker version >= 24
 
-## Code scaffolding
+## Project Structure
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This project is based on standard Angular Application, so it follows the same project structure.
 
-## Build
+```
+├── docker/ (contains docker compose files for external components based on architecture design)
+├── src
+│   ├── app
+<%_ if (oauth2) { _%>
+│   │   ├── auth (Authentication component)
+<%_ } _%>
+│   │   ├── home (Homepage component)
+│   │   ├── layouts (Navbar component)
+│   │   ├── app-routing.module.ts
+│   │   ├── app.component.css
+│   │   ├── app.component.html
+│   │   ├── app.component.spec.ts
+│   │   ├── app.component.ts
+│   │   └── app.module.ts
+│   ├── assets
+│   │   └── logox.png
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.css
+├── README.md (Project documentation)
+├── angular.json (Angular configuration)
+├── comm.yo-rc.json (generator configuration file for communications)
+├── environment.production.ts (Production environment configuration)
+├── environment.ts (Development environment configuration)
+├── package.json (npm configuration)
+├── tsconfig.app.json
+├── tsconfig.json
+└── tsconfig.spec.json
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+<%_ if (oauth2 || eureka) { _%>
+## Dependencies
 
-## Running unit tests
+This application is configured to work with few external components.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Docker compose files are provided for the same to get started quickly.
 
-## Running end-to-end tests
+Component details:
+<%_ if (oauth2) { _%>
+- Keycloak as Identity Management - `docker compose -f docker/keycloak.yml up -d`
+<%_ } _%>
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+<%_ if (eureka) { _%>
+- Eureka Service Discovery:
+<%_ } _%>
 
-## Further help
+On launch, <%= baseName %> will refuse to start if it is not able to connect to any of the above component(s).
+<%_ } _%>
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Get Started
+
+Install required dependencies: `npm install`
+
+Run the prototype locally in development mode: `npm start`
+
+Open [http://localhost:<%= serverPort %>](http://localhost:<%= serverPort %>) to view it in your browser.
+
+The page will reload when you make changes.
+
+## Containerization
+
+Build the docker image: `docker build -t <%= baseName %>:latest .`
+
+Start the container: `docker run -d -p <%= serverPort %>:80 <%= baseName %>:latest`
