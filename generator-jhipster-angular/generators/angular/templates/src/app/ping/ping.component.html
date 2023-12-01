@@ -1,0 +1,25 @@
+<div class="ping">
+    <h2 style="color: black;">Ping your service</h2>
+    <div class="select-service">
+      <h4 style="color: black;">Select Your service to be pinged</h4>
+      <!-- Simple dropdown list directly in the component -->
+      <select
+      id="pingDropdown"
+      [(ngModel)]="selectedService"
+      class="pingDropdown"
+    >
+        <option value="">Select an option</option>
+        <%_ for (let i = 0; i < servicesWithOutDB.length ; i++) { _%>
+        <option value="<%= servicesWithOutDB[i].toLowerCase() %>"><%= servicesWithOutDB[i].toLowerCase() %></option>
+      <%_ } _%>
+      </select>
+      <button class="ping-button" (click)="handlePing()" style="font-size: medium; cursor: pointer;">Ping</button>
+      <div>
+        <label style="color: rgb(0, 0, 0);">Response body</label>
+        <div class="response-container" style="color: rgb(255, 255, 255);">
+          <!-- Use Angular syntax for property binding -->
+          <h4 >{{ responseData ? '{\n\t"server": "' + responseData + '"\n}' : 'No response yet' }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>

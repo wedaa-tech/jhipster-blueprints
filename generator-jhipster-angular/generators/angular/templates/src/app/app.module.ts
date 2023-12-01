@@ -8,18 +8,30 @@ import NavbarComponent from './layouts/navbar/navbar.component';
 <%_ if(oauth2)  { _%>
 import { AuthConfigModule } from './auth/auth-config.module';
 <%_ } _%>  
+<%_  if ( servicesWithOutDB.length > 0 ) { _%> 
+import { PingComponent } from './ping/ping.component';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+<%_ } _%> 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
+      PingComponent
+    <%_ } _%> 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     <%_ if(oauth2)  { _%>
-    AuthConfigModule
+    AuthConfigModule,
+    <%_ } _%> 
+    <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
+    HttpClientModule,
+    FormsModule
     <%_ } _%> 
   ],
   providers: [],
