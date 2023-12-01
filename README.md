@@ -48,7 +48,7 @@ to the locally installed generator-jhispter in package*.json under dependencies 
 FOR EXAMPLE :-
 
 
-> "generator-jhipster": "file:/home/rakesh/jhipster/generator-jhipster",
+> "generator-jhipster": "file:/home/rakesh/WeDaa/generator-jhipster",
 
 ---
 

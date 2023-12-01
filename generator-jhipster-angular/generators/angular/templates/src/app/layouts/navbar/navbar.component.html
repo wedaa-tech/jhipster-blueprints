@@ -7,6 +7,11 @@
           <span class="nav-item">
             <a href="/" class="nav-link-home">Home</a>
           </span>
+          <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
+          <span class="nav-item">
+            <a routerLink="/ping" class="nav-link">Ping</a>
+          </span>
+          <%_ } _%>  
           <span class="nav-item">
             <a (click)="openDocs()" class="nav-link">Docs</a>
           </span>

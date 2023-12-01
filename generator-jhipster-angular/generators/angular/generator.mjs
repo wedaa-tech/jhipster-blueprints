@@ -2,7 +2,7 @@ import chalk from "chalk";
 import AngularGenerator from "generator-jhipster/generators/angular";
 import yosay from 'yosay';
 import { loadAngularGeneratorOpts } from './prompts.mjs';
-import { deleteUnwantedFiles, processApiServersforClinet, loadDeploymentConfigs } from "./utils.mjs";
+import { deleteUnwantedFiles, processApiServersforClinet, loadDeploymentConfigs, loadServicesWithAndWithOutDB } from "./utils.mjs";
 
 
 export default class extends AngularGenerator {
@@ -168,6 +168,7 @@ export default class extends AngularGenerator {
       writing() {
         let apiServers = processApiServersforClinet.call(this);
         let deploymentConfig = loadDeploymentConfigs.call(this);
+        let {servicesWithDB, servicesWithOutDB} = loadServicesWithAndWithOutDB.call(this);
         const templateVariables = {
           serverPort: this.serverPort,
           packageName: this.packageName,
@@ -179,25 +180,36 @@ export default class extends AngularGenerator {
           mongodb: this.mongodb,
           apiServers: apiServers,
           deploymentConfig: deploymentConfig,
+          servicesWithDB: servicesWithDB,
+          servicesWithOutDB: servicesWithOutDB,
         };
         const templatePaths = [
           { src: ".vscode/", dest: ".vscode/" },
-          { src: "src/", dest: "src/" },
-          { src: ".editorconfig", dest: ".editorconfig" },
-          { src: "angular.json", dest: "angular.json" },
-          { src: ".gitignore", dest: ".gitignore" },
-          { src: "package.json", dest: "package.json" },
-          { src: "README.md", dest: "README.md" },
-          { src: "Dockerfile", dest: "Dockerfile" },
-          { src: "nginx.conf", dest: "nginx.conf" },
-          { src: "tsconfig.app.json", dest: "tsconfig.app.json" },
-          { src: "tsconfig.json", dest: "tsconfig.json" },
-          { src: "tsconfig.spec.json", dest: "tsconfig.spec.json" },
+          { src: "src/favicon.ico", dest: "src/favicon.ico" },
+          { src: "src/index.html", dest: "src/index.html" },
+          { src: "src/main.ts", dest: "src/main.ts" },
+          { src: "src/styles.css", dest:"src/styles.css" },
           { src: "src/assets/", dest: "src/assets/" },
           { src: "src/app/home", dest: "src/app/home" },
-          { src: "src/app/layouts", dest: "src/app/layouts" },
-          { src: "environment.ts", dest: "environment.ts" },
+          { src: "src/app/layouts/", dest: "src/app/layouts/" },
+          { src: "src/app/app-routing.module.ts", dest: "src/app/app-routing.module.ts" },
+          { src: "src/app/app.component.css", dest: "src/app/app.component.css" },
+          { src: "src/app/app.component.html", dest: "src/app/app.component.html" },
+          { src: "src/app/app.component.spec.ts", dest: "src/app/app.component.spec.ts" },
+          { src: "src/app/app.component.ts", dest: "src/app/app.component.ts" },
+          { src: "src/app/app.module.ts", dest: "src/app/app.module.ts" },
+          { src: ".editorconfig", dest: ".editorconfig" },
+          { src: ".gitignore", dest: ".gitignore" },
+          { src: "angular.json", dest: "angular.json" },
+          { src: "Dockerfile", dest: "Dockerfile" },
           { src: "environment.production.ts", dest: "environment.production.ts" },
+          { src: "environment.ts", dest: "environment.ts" },
+          { src: "nginx.conf", dest: "nginx.conf" },
+          { src: "package.json", dest: "package.json" },
+          { src: "README.md", dest: "README.md" },
+          { src: "tsconfig.app.json", dest: "tsconfig.app.json" },
+          { src: "tsconfig.json", dest: "tsconfig.json" },
+          { src: "tsconfig.spec.json", dest: "tsconfig.spec.json" }          
         ];
         const conditionalTemplates = [
           { 
@@ -214,6 +226,11 @@ export default class extends AngularGenerator {
             condition: this.oauth2,
             src:  "docker/keycloak.yml",
             dest: "docker/keycloak.yml"
+          },
+          { 
+            condition: (servicesWithOutDB.length > 0),
+            src:  "src/app/ping/",
+            dest: "src/app/ping/",
           },
         ];
         templatePaths.forEach(({ src, dest }) => {
