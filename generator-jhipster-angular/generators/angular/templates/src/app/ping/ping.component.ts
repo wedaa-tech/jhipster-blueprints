@@ -36,7 +36,6 @@ export class PingComponent implements OnInit {
       if (foundEnv) {
         apiUrl = foundEnv.value;
       }
-      // environment.wedaaGithub;
       // Make the API call using Angular HttpClient
       this.http.get<any>(apiUrl +`/api/services/${this.selectedService}`)
         .subscribe(

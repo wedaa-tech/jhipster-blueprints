@@ -103,6 +103,5 @@ export function loadServicesWithAndWithOutDB() {
       servicesWithDB.push(baseName);
     }
   });
-  console.log("----------"+servicesWithOutDB);
   return {servicesWithDB, servicesWithOutDB};
 }
