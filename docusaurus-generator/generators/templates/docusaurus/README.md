@@ -1,24 +1,30 @@
-# Running Docusaurus Documentation Locally in VSCode
+# <%= applicationName %> prototype
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
-
-Follow these steps to run a Docusaurus documentation site that you've cloned from GitHub on your local machine using VSCode.
+This is a docusaurus application prototype, generated using WeDAA. You can find documentation and help at -
+- [WeDAA Docs](https://www.wedaa.tech/docs/introduction/what-is-wedaa/)
+- [Docusaurus Docs](https://docusaurus.io/docs/category/guides)
 
 ## Prerequisites
 
-Before you begin, make sure you have the following installed on your computer:
+- Node version >= 18
+- npm version >= 9.6
 
-1. [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) (Node Package Manager)
+## Project Structure
 
-## Step 1: Clone the Repository
+This is a standard Docusaurus application, hence it follows same project structure.
 
-Clone the Docusaurus documentation repository from GitHub to your local machine.
+```
+├── blog (Blogs in Markdown files)
+├── docs (Docs in Markdown files)
+├── src (React pages)
+├── static (static assets like images, videos, etc)
+├── README.md
+├── docusaurus.config.js (docusaurus project configurations)
+├── package.json
+└── sidebars.js (Sidebar configuration)
+```
 
-## Step 2: Open VSCode and Terminal
-
-Open Visual Studio Code (VSCode) and navigate to the cloned repository's root folder. To do this, go to the top menu and select `Terminal` > `New Terminal`.
-
-## Step 3: Install Dependencies
+## Get Started
 
 In the terminal, run the following command to install all the required dependencies for the Docusaurus documentation site:
 
@@ -26,15 +32,9 @@ In the terminal, run the following command to install all the required dependenc
 npm install && npm run build
 ```
 
-## Step 4: Start the Local Development Server
-
 After the dependencies are installed, start the local development server using the following command:
 ```bash
 npm run serve
 ```
 
-## Step 5: Access the Local Site
-
-Once the server is up and running, open your web browser and visit http://localhost:3000/ to see the locally running Docusaurus documentation site.
-
-Now, you can explore and interact with the documentation website on your local machine. Any changes you make to the Markdown files will automatically trigger a refresh on the site, allowing you to preview your changes in real-time.
+Once the server is up and running, open your web browser and visit http://localhost:<%= serverPort %>/ to see the locally running Docusaurus documentation site.
