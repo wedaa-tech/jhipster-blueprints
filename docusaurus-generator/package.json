@@ -1,11 +1,13 @@
 {
   "name": "generator-docusaurus",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "files": [
     "generators"
   ],
-  "keywords": ["yeoman-generator"],
+  "keywords": [
+    "yeoman-generator"
+  ],
   "dependencies": {
     "yeoman-generator": "^5.9.0"
   }
