@@ -14,6 +14,9 @@ export const NavBar = () => {
   const [activeLink, setActiveLink] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  <%_  if( servicesWithDB.length > 0 ) { _%>
+  const [isSubMenuOpenForNotes, setIsSubMenuOpenForNotes] = useState(false);
+  <%_ } _%> 
 <%_ if (oauth2) { _%>
   const auth = useAuth();
 <%_ } _%> 
@@ -33,9 +36,16 @@ export const NavBar = () => {
   }, [])
 
   const toggleMenu = () => {
-    console.log("Toggle menu clicked");
+    console.log("Toggle menu swagger clicked");
     setIsSubMenuOpen(!isSubMenuOpen);
   }
+  <%_  if( servicesWithDB.length > 0 ) { _%>
+  const toggleNotesMenu = () => {
+    console.log("Toggle menu notes clicked");
+    setIsSubMenuOpenForNotes(!isSubMenuOpenForNotes);
+
+  }
+  <%_ } _%> 
 
   const onUpdateActiveLink = (value) => {
     console.log("Update active link clicked");
@@ -63,7 +73,6 @@ export const NavBar = () => {
       <Navbar expand="md" className={scrolled ? "scrolled" : ""}>
         <Container>
           <Navbar.Brand href="/">
-
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav">
             <span className="navbar-toggler-icon"></span>
@@ -93,6 +102,21 @@ export const NavBar = () => {
                 Ping
               </Nav.Link>
             <%_ } _%>  
+
+            <%_  if( servicesWithDB.length > 0 ) { _%>
+              <Nav.Link
+                className={
+                  activeLink === "notes" ? "active navbar-link" : "navbar-link"
+                }
+                onClick={() => {
+                  toggleNotesMenu();
+                  onUpdateActiveLink("notes")
+                }}
+              >
+                Notes <BiChevronDown />
+            </Nav.Link>
+            <%_ } _%> 
+
               <Nav.Link href="/docs" 
                 className={activeLink === 'projects' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('projects')}>
                   Docs
@@ -128,6 +152,43 @@ export const NavBar = () => {
               </div>
             </div>
           <%_ } _%> 
+
+          <%_  if( servicesWithDB.length > 0 ) { _%>
+            <div
+                className={
+                  isSubMenuOpenForNotes ? "sub-menu-wrap open-menu" : "sub-menu-wrap"
+                }
+                id="subMenu"
+            >
+              <div class="sub-menu">
+                <%_  if (servicesWithDB.length == 1) { _%>
+                <a href="/notes/<%= servicesWithDB[0].toLowerCase() %>" class="sub-menu-link">
+                  <img src=""></img>
+                  <h5><%= servicesWithDB[0].toLowerCase() %></h5>
+                  <span>&gt;</span>
+                </a>
+                <hr></hr>
+                <span></span>
+                <%_ } else {_%> 
+                  <%_ for (let i = 0; i < servicesWithDB.length - 1; i++) { _%>
+                  <a href="/notes/<%= servicesWithDB[i].toLowerCase() %>" class="sub-menu-link">
+                  <img src=""></img>
+                  <h5><%= servicesWithDB[i].toLowerCase() %></h5>
+                  <span>&gt;</span>
+                  </a>
+                  <hr></hr>
+                  <span></span>
+                  <%_ } _%> 
+                  <a href="/notes/<%= servicesWithDB[servicesWithDB.length - 1].toLowerCase() %>" class="sub-menu-link">
+                  <img src=""></img>
+                  <h5><%= servicesWithDB[servicesWithDB.length - 1].toLowerCase() %></h5>
+                  <span>&gt;</span>
+                </a>
+              <%_ } _%> 
+              </div>
+            </div>
+          <%_ } _%>  
+
             <span className="navbar-text">
               <div className="social-icon">
                 <a onClick={() => window.open(process.env.REACT_APP_WEDAA_GITHUB, '_blank')}><img src={navIcon2} alt="" /></a>
