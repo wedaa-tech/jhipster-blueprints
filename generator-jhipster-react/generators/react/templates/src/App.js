@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -14,6 +13,9 @@ import Ping from './components/Ping';
 <%_ } _%> 
 <%_ if (oauth2) { _%>
 import PrivateRoute from './config/auth/privateRoute';
+<%_ } _%> 
+<%_  if( servicesWithDB.length > 0 ) { _%>
+import NotesList from './components/notes/NotesList';
 <%_ } _%> 
 
 function App() {
@@ -47,13 +49,36 @@ function App() {
             <%_ } _%> 
           } />
           <%_ }) _%>
+        <%_ servicesWithDB.forEach((service) =>  { _%>
+          <Route
+            path="/notes/<%= service.toLowerCase() %>"
+            element={
+              <%_ if (oauth2) { _%>
+                <PrivateRoute>
+              <%_ } _%> 
+              <div className="component">
+                <NotesList notesApp={"<%= service.toLowerCase() %>"} />
+              </div>
+               <%_ if (oauth2) { _%>
+                </PrivateRoute>
+              <%_ } _%> 
+            }
+          />
+          <%_ }) _%>
+
         <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
           <Route
             path="/ping"
             element={
+              <%_ if (oauth2) { _%>
+                <PrivateRoute>
+              <%_ } _%> 
               <div className="component">
               <Ping />
               </div>
+               <%_ if (oauth2) { _%>
+                </PrivateRoute>
+              <%_ } _%> 
             }
           />
         <%_ } _%> 
