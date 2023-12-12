@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+<%_ if (oauth2) { _%>
+import { useAuth } from "react-oidc-context";
+<%_ } _%>
 
 const PingDropdown = ({ onDropdownChange }) => {
     const [selectedValue, setSelectedValue] = useState('');
@@ -29,6 +32,9 @@ const PingDropdown = ({ onDropdownChange }) => {
 const Ping = () => {
     const [selectedService, setSelectedService] = useState('');
     const [responseData, setResponseData] = useState(null);
+    <%_ if (oauth2) { _%>
+    const auth = useAuth();
+    <%_ } _%>
 
     const handleDropdownChange = (value) => {
         setSelectedService(value);
@@ -38,7 +44,15 @@ const Ping = () => {
         if (selectedService) {
             // Make the API call using fetch
             let envString = "REACT_APP_MICROSERVICE_" + selectedService.toUpperCase();
-            fetch( process.env[envString] + `/api/services/${selectedService}`)
+            fetch( process.env[envString] + `/api/services/${selectedService}`, {
+                method: 'GET',
+                headers: {
+                    <%_ if (oauth2) { _%>
+                    'Authorization': `Bearer ${auth.user.access_token}`,
+                    <%_ } _%>
+                    'Content-Type': 'application/json',
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     // Set the response data in state
@@ -47,7 +61,6 @@ const Ping = () => {
                 .catch(error => {
                     // Handle errors
                     console.error('API Error:', error);
-
                 });
         } else {
             console.error('Please select a service before pinging.');

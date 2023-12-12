@@ -1,18 +1,33 @@
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { MdDeleteOutline } from "react-icons/md";
+<%_ if (oauth2) { _%>
+import { useAuth } from "react-oidc-context";
+<%_ } _%>
+
 const NotesList = ({ notesApp }) => {
   const [notes, setNotes] = useState([]);
   const [showAddNotePopup, setShowAddNotePopup] = useState(false);
   const [newNote, setNewNote] = useState({ subject: "", summary: "" });
   const [openModal, setOpenModal] = useState(false);
+  <%_ if (oauth2) { _%>
+  const auth = useAuth();
+  <%_ } _%>
 
   useEffect(() => {
     // Fetch notes from the backend API
     const fetchNotes = async () => {
       try {
         let envString = 'REACT_APP_MICROSERVICE_' + notesApp.toUpperCase();
-        const response = await fetch(process.env[envString] + `/api/notes`); // Replace with your actual API endpoint
+        const response = await fetch(process.env[envString] + `/api/notes`, {
+          method: 'GET',
+          headers: {
+            <%_ if (oauth2) { _%>
+            'Authorization': `Bearer ${auth.user.access_token}`,
+            <%_ } _%>
+            'Content-Type': 'application/json',
+          }
+        }); // Replace with your actual API endpoint
         const data = await response.json();
         setNotes(data); // Assuming the API response is an array of notes
       } catch (error) {
@@ -29,6 +44,9 @@ const NotesList = ({ notesApp }) => {
       const response = await fetch(process.env[envString] + `/api/notes`, {
         method: "POST",
         headers: {
+          <%_ if (oauth2) { _%>
+          'Authorization': `Bearer ${auth.user.access_token}`,
+          <%_ } _%>
           "Content-Type": "application/json",
         },
         body: JSON.stringify(Data),
@@ -75,6 +93,12 @@ const NotesList = ({ notesApp }) => {
       let envString = 'REACT_APP_MICROSERVICE_' + notesApp.toUpperCase();
       await fetch(process.env[envString] + `/api/notes?id=${id}`, {
         method: "DELETE",
+        headers: {
+          <%_ if (oauth2) { _%>
+          'Authorization': `Bearer ${auth.user.access_token}`,
+          <%_ } _%>
+          "Content-Type": "application/json",
+        }
       });
       // Assuming the delete was successful, update the local state
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
