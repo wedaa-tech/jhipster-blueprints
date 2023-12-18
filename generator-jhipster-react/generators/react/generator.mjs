@@ -2,7 +2,7 @@ import chalk from "chalk";
 import yosay from 'yosay';
 import ReactGenerator from "generator-jhipster/generators/react";
 import { loadReactGeneratorOpts } from './prompts.mjs';
-import { deleteUnwantedFiles, processApiServersforClinet, loadDeploymentConfigs, loadServicesWithAndWithOutDB } from "./utils.mjs";
+import { deleteUnwantedFiles, processApiServersforClinet, loadDeploymentConfigs, loadServicesWithAndWithOutDB, loadAppConfigs } from "./utils.mjs";
 
 export default class extends ReactGenerator {
   constructor(args, opts, features) {
@@ -165,6 +165,7 @@ export default class extends ReactGenerator {
         deleteUnwantedFiles.call(this);
       },
       writing() {
+        let appConfigs =  loadAppConfigs.call(this);
         let apiServers = processApiServersforClinet.call(this);
         let deploymentConfig = loadDeploymentConfigs.call(this);
         let {servicesWithDB, servicesWithOutDB} = loadServicesWithAndWithOutDB.call(this);
@@ -181,6 +182,8 @@ export default class extends ReactGenerator {
           deploymentConfig: deploymentConfig,
           servicesWithDB: servicesWithDB,
           servicesWithOutDB: servicesWithOutDB,
+          nodePort: this.nodePort,
+          minikube: appConfigs[0]['generator-jhipster'].minikube || false,
         };
         const templatePaths = [
           { src: "public/", dest: "public/" },

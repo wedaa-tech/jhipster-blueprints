@@ -82,7 +82,8 @@ export function processApiServersforClinet() {
     const { baseName, serverPort } = appConfig['generator-jhipster'];
     const matchingCommunication = communications.find(comm => comm.server === baseName && comm.client === this.baseName);
     if (matchingCommunication) {
-      apiServers.push({ baseName, serverPort });
+      let nodePort = appConfig['generator-jhipster'].applicationIndex  + 30200;  // app node port start's from 30200
+      apiServers.push({ baseName, serverPort, nodePort });
     }
   });
   return apiServers;
