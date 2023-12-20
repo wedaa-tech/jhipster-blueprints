@@ -11,6 +11,17 @@ message Event {
 	string description=3;
 }
 
+message NotesRequest {
+	string subject =1;
+	string description=2;
+}
+
+message NotesResponse{
+	string id = 1;
+	string subject =2;
+	string description=3;
+}
+
 message MyMessage {
   string id = 1;
   string data = 2;
