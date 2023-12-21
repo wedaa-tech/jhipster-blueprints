@@ -17,7 +17,7 @@ var event pb.Event
 
 func InitializeMongoDb() {
 	mongoClient = config.GetInstance()
-	fetchMongoId()
+	InitializeMongoCollection()
 }
 
 func AddEvent(response http.ResponseWriter, request *http.Request) {

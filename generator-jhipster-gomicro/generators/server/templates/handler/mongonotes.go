@@ -9,82 +9,44 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
-	"strconv"
-	"sync"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/url"
 )
 
 var note pb.NotesResponse
 
+var noteCollection *mongo.Collection
 
-var (
-	noteCollection *mongo.Collection
-	noteMu         sync.Mutex
-	currentID      int
-)
-
-func fetchMongoId() {
+func InitializeMongoCollection() {
 	if(mongoClient!=nil){
 	noteCollection = mongoClient.Database("<%= baseName %>").Collection("notes")
-	currentID, _ = getMaxIDFromDB()
 	}
 }
-
-func getMaxIDFromDB() (int, error) {
-	pipeline := []bson.D{
-		bson.D{
-			{"$group", bson.D{
-				{"_id", nil},
-				{"max_id", bson.D{
-					{"$max", bson.D{
-						{"$toInt", "$_id"},
-					}},
-				}},
-			}},
-		},
-	}
-	cursor, err := noteCollection.Aggregate(context.Background(), pipeline)
-	if err != nil {
-		logger.Errorf(err.Error())	
-	}
-	defer cursor.Close(context.Background())
-
-	var result bson.M
-	if cursor.Next(context.Background()) {
-		err := cursor.Decode(&result)
-		if err != nil {
-			logger.Errorf(err.Error())	
-		}
-	}
-	maxID,ok:= result["max_id"].(int32)
-	if !ok {
-		return 0, nil
-	}
-	return int(maxID), nil
-}
-
-func getNextID() int {
-	noteMu.Lock()
-	defer noteMu.Unlock()
-	currentID++
-	return currentID
-}
-
 
 func AddNote(response http.ResponseWriter, request *http.Request) {
+	var notereq pb.NotesRequest
 	response.Header().Set("content-type", "application/json")
-	_ = json.NewDecoder(request.Body).Decode(&note)
-	logger.Infof("%v", note)
-	note.Id = strconv.Itoa(getNextID())
-	_, err := noteCollection.InsertOne(context.Background(), note)
+	_ = json.NewDecoder(request.Body).Decode(&notereq)
+	res, err := noteCollection.InsertOne(context.Background(), notereq)
 	if err != nil {
 		logger.Errorf(err.Error())
 		response.WriteHeader(400)
 		response.Write([]byte(`{ "message": "` + err.Error() + `" }`))
 		return
 	} else {
-		logger.Infof("Inserted object with Id:" + note.Id)
-		json.NewEncoder(response).Encode(note)
+		objectID, ok := res.InsertedID.(primitive.ObjectID)
+		if !ok {
+		response.WriteHeader(http.StatusInternalServerError)
+		response.Write([]byte(`{ "message": "Invalid Id" }`))
+		return
+		}
+		notesResponse := pb.NotesResponse{
+			Id:          objectID.Hex(), 
+			Description: notereq.Description,
+			Subject: notereq.Subject,
+		}
+		logger.Infof("Inserted Note with Id:" + notesResponse.Id)
+		json.NewEncoder(response).Encode(notesResponse)
 	}
 }
 
