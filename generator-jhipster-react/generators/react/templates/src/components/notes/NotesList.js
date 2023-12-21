@@ -29,6 +29,7 @@ const NotesList = ({ notesApp }) => {
           }
         }); // Replace with your actual API endpoint
         const data = await response.json();
+        if(data!=null)
         setNotes(data); // Assuming the API response is an array of notes
       } catch (error) {
         console.error("Error fetching notes:", error);
