@@ -118,7 +118,8 @@ func DeleteNote(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 	id := idValues[0]
-	filter := bson.D{{Key: "_id", Value: id}}
+	objID, err := primitive.ObjectIDFromHex(id)
+	filter := bson.D{{Key: "_id", Value: objID}}
 	result, err := noteCollection.DeleteOne(context.Background(), filter)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
