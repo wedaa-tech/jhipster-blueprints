@@ -232,6 +232,16 @@ export default class extends AngularGenerator {
             src:  "src/app/ping/",
             dest: "src/app/ping/",
           },
+          { 
+            condition: (apiServers.length > 0),
+            src:  "src/app/swagger/",
+            dest: "src/app/swagger/",
+          },
+          { 
+            condition: (apiServers.length > 0),
+            src:  "src/app/layouts/navbar/swagger-dropdown.component.ts",
+            dest: "src/app/layouts/navbar/swagger-dropdown.component.ts",
+          },
         ];
         templatePaths.forEach(({ src, dest }) => {
           this.fs.copyTpl(

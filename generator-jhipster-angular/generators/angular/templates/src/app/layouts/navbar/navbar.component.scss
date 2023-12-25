@@ -1,6 +1,23 @@
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 
+nav.navbar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 9999;
+  background-color: #000000;
+  padding: 18px 0; /* Adjust padding as needed */
+  transition: 0.32s ease-in-out;
+}
+
+/* Additional styling for the scrolled state if needed */
+nav.navbar.scrolled {
+  /* Adjust styles as needed when scrolled */
+  padding: 10px 0;
+  background-color: #000000;
+}
+
 .navbar-right-content {
   display: flex;
   align-items: center;
@@ -9,6 +26,7 @@
 .navbar-nav  {
   display: flex;
   flex-direction: row;
+  z-index: 1000;
 }
 
 .nav-item {

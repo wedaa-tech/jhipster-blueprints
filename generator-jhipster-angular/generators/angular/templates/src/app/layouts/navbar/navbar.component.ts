@@ -11,6 +11,18 @@ import { Subscription } from 'rxjs';
 })
 export default class NavbarComponent implements OnInit {
   isNavbarCollapsed = true;
+  <%_  if ( apiServers.length > 0 ) { _%> 
+    isSwaggerDropdownOpen: boolean = false;
+
+  openSwaggerDropdown() {
+    this.isSwaggerDropdownOpen = !this.isSwaggerDropdownOpen;
+  }
+
+  closeSwaggerDropdown() {
+    this.isSwaggerDropdownOpen = false;
+  }
+  <%_ } _%> 
+
   <%_ if(oauth2)  { _%>
   isAuthenticated: boolean = false;
   private isAuthenticatedSubscription!: Subscription;
