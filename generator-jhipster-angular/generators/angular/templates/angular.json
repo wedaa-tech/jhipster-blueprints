@@ -25,6 +25,9 @@
               "src/assets"
             ],
             "styles": [
+              <%_  if ( apiServers.length > 0 ) { _%> 
+              "node_modules/swagger-ui-dist/swagger-ui.css",
+              <%_ } _%> 
               "src/styles.css"
             ],
             "scripts": []
@@ -90,6 +93,9 @@
               "src/assets"
             ],
             "styles": [
+              <%_  if ( apiServers.length > 0 ) { _%> 
+              "node_modules/swagger-ui-dist/swagger-ui.css",
+              <%_ } _%> 
               "src/styles.css"
             ],
             "scripts": []

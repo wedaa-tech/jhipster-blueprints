@@ -22,6 +22,10 @@
     "bootstrap": "^5.3.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "path": "^0.12.7",
+    <%_  if ( apiServers.length > 0 ) { _%> 
+    "swagger-ui-dist": "^5.10.3",
+    <%_ } _%>
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
@@ -35,6 +39,9 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    <%_  if ( apiServers.length > 0 ) { _%> 
+    "@types/swagger-ui-dist": "^3.30.4",
+    <%_ } _%>
     "typescript": "~5.1.3"
   }
 }

@@ -7,6 +7,12 @@
           <span class="nav-item">
             <a href="/" class="nav-link-home">Home</a>
           </span>
+          <%_  if ( apiServers.length > 0 ) { _%> 
+            <div class="nav-item" (click)="openSwaggerDropdown()">
+              <a class="nav-link">Swagger ˅ </a>
+              <app-dropdown [isOpen]="isSwaggerDropdownOpen"></app-dropdown>
+            </div>
+          <%_ } _%> 
           <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
           <span class="nav-item">
             <a routerLink="/ping" class="nav-link">Ping</a>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import HomeComponent from './home/home.component';
@@ -10,9 +10,14 @@ import { AuthConfigModule } from './auth/auth-config.module';
 <%_ } _%>  
 <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
 import { PingComponent } from './ping/ping.component';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 <%_ } _%> 
+<%_  if (apiServers.length > 0) { _%>
+import { SwaggerComponent } from './swagger/swagger.component';
+import { SwaggerService } from './swagger/swagger.service';
+import {SwaggerDropdownComponent} from './layouts/navbar/swagger-dropdown.component';
+<%_ } _%> 
+
 
 @NgModule({
   declarations: [
@@ -20,21 +25,33 @@ import { FormsModule } from '@angular/forms';
     HomeComponent,
     NavbarComponent,
     <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
-      PingComponent
+      PingComponent,
+    <%_ } _%> 
+    <%_  if ( apiServers.length > 0 ) { _%> 
+      SwaggerComponent,
+      SwaggerDropdownComponent,
     <%_ } _%> 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     <%_ if(oauth2)  { _%>
     AuthConfigModule,
     <%_ } _%> 
     <%_  if ( servicesWithOutDB.length > 0 ) { _%> 
-    HttpClientModule,
     FormsModule
     <%_ } _%> 
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    <%_  if ( apiServers.length > 0 ) { _%> 
+      SwaggerService,
+    <%_ } _%> 
+  ],
+  bootstrap: [AppComponent,
+    <%_  if ( apiServers.length > 0 ) { _%> 
+      SwaggerComponent,
+    <%_ } _%> 
+  ]
 })
 export class AppModule { }
