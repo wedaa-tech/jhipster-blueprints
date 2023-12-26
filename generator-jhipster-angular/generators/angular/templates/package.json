@@ -6,6 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    <%_  if ( oauth2 ) { _%> 
+    "docker:keycloak:up": "docker compose -f docker/keycloak.yml up --wait",
+    "docker:keycloak:down": "docker-compose -f docker/keycloak.yml down",
+    <%_ } _%>
     "test": "ng test"
   },
   "private": true,
