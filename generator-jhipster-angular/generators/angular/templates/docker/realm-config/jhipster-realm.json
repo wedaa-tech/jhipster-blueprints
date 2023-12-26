@@ -1,7 +1,7 @@
 {
   "id": "jhipster",
   "realm": "jhipster",
-  "displayName": "JHipster",
+  "displayName": "WeDAA",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,

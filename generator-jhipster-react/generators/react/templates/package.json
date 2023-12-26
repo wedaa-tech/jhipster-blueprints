@@ -25,6 +25,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    <%_  if ( oauth2 ) { _%> 
+    "docker:keycloak:up": "docker compose -f docker/keycloak.yml up --wait",
+    "docker:keycloak:down": "docker-compose -f docker/keycloak.yml down",
+    <%_ } _%>
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
