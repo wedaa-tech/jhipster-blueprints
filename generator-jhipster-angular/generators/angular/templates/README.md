@@ -53,7 +53,7 @@ Docker compose files are provided for the same to get started quickly.
 
 Component details:
 <%_ if (oauth2) { _%>
-- Keycloak as Identity Management - `docker compose -f docker/keycloak.yml up -d`
+- Keycloak as Identity Management - `npm run docker:keycloak:up`
 <%_ } _%>
 
 <%_ if (eureka) { _%>
