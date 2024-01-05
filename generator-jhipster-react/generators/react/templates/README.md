@@ -40,7 +40,7 @@ Component details:
 <%_ if (oauth2) { _%>
 - Keycloak as Identity Management:
   
-  Run keycloak as docker container - `docker compose -f docker/keycloak.yml up -d`
+  Run keycloak as docker container - `npm run docker:keycloak:up`
 <%_ } _%>
 
 <%_ if (eureka) { _%>
