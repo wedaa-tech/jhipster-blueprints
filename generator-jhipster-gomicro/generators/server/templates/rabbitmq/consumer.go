@@ -48,7 +48,7 @@ func Consumer<%= rabbitmqServer %>To<%= rabbitmqClient %> () {
 	forever := make(chan bool)
 	go func() {
 		for d := range msgs {
-			logger.Infof("Recieved Message: %s\n", d.Body)
+			logger.Infof("Received Message: %s\n", d.Body)
 		}
 	}()
 	<-forever
