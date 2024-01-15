@@ -195,14 +195,13 @@ export default class extends ServerGenerator {
           baseName: this.baseName,
           auth: this.auth,
           eureka: this.eureka,
-          rabbitmq: this.rabbitmq,
+          rabbitmq: rabbitmq,
           postgresql: this.postgress,
           mongodb: this.mongodb,
           restServer: restServer,
           restClient: restClient,
           rabbitmqServer: rabbitmqServer,
           rabbitmqClient: rabbitmqClient,
-          rabbitmq: rabbitmq,
         };
 
         const templatePaths = [
@@ -246,8 +245,7 @@ export default class extends ServerGenerator {
           },
           { condition: this.eureka, src: 'docker/central-server-config', dest: 'docker/central-server-config' },
           { condition: this.eureka, src: 'docker/jhipster-registry.yml', dest: 'docker/jhipster-registry.yml' },
-          { condition: this.rabbitmq, src: 'rabbitmq', dest: 'rabbitmq' },
-          { condition: this.rabbitmq, src: 'docker/rabbitmq.yml', dest: 'docker/rabbitmq.yml' },
+          { condition: rabbitmq, src: 'docker/rabbitmq.yml', dest: 'docker/rabbitmq.yml' },
           {
             condition: restServer?.length,
             src: 'eurekaregistry/ServiceDiscovery.go',
