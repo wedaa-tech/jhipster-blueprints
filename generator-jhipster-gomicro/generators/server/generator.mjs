@@ -198,6 +198,7 @@ export default class extends ServerGenerator {
           rabbitmq: rabbitmq,
           postgresql: this.postgress,
           mongodb: this.mongodb,
+          databasePort: this.databasePort,
           restServer: restServer,
           restClient: restClient,
           rabbitmqServer: rabbitmqServer,
