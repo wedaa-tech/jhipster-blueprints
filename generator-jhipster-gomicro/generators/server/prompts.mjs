@@ -153,6 +153,7 @@ export async function askForServerSideOpts() {
       this.rabbitmq=(this.jhipsterConfigWithDefaults.messageBroker=="rabbitmq")
       this.postgress=(this.jhipsterConfigWithDefaults.prodDatabaseType=="postgresql")
       this.mongodb=(this.jhipsterConfigWithDefaults.databaseType=="mongodb")
+      this.databasePort=this.jhipsterConfigWithDefaults.databasePort;
     return ;
   }
 
