@@ -1,4 +1,5 @@
 version: '3.8'
+name: <%= baseName %>
 services:
   mongodb:
     image: mongo:6.0.5
