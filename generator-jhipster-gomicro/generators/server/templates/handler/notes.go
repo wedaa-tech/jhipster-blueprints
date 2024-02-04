@@ -3,28 +3,37 @@ package handler
 import (
 	pb "<%= packageName %>/proto"
 	"encoding/json"
+	"net/http"
+	"net/url"
+
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
-	"net/http"
-	"fmt"
-	"net/url"
 )
 
 var notestableName = "notes"
+
+type Notes struct {
+	Id          uint64 `gorm:"primaryKey" json:"id,omitempty"`
+	Subject     string `json:"subject,omitempty"`
+	Description string `json:"description,omitempty"`
+}
 
 func AddNote(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var note *pb.NotesRequest
 	_ = json.NewDecoder(request.Body).Decode(&note)
-	fmt.Print(note);
-	e := dbClient.Table(notestableName).Create(&note)
+	noteData := Notes{
+		Subject:     note.Subject,
+		Description: note.Description,
+	}
+	e := dbClient.Table(notestableName).Create(&noteData)
 	if e.Error != nil {
 		response.WriteHeader(http.StatusInternalServerError)
 		response.Write([]byte(`{ "message": "` + e.Error.Error() + `" }`))
 		return
 	}
 	logger.Infof("Inserted data")
-	json.NewEncoder(response).Encode(note)
+	json.NewEncoder(response).Encode(noteData)
 }
 
 func ReadNoteById(response http.ResponseWriter, r *http.Request) {
