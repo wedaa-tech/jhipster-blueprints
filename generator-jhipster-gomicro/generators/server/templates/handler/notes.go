@@ -68,9 +68,18 @@ func UpdateNote(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var note *pb.NotesResponse
 	var ev *pb.NotesResponse
+	var updatedNotes *pb.NotesRequest
 	_ = json.NewDecoder(request.Body).Decode(&note)
-	dbClient.Table(notestableName).First(&ev, note.Id)
-	dbClient.Table(notestableName).Model(&ev).Updates(note)
+	updatedNotes := pb.NotesRequest{
+		Subject:     note.Subject,
+		Description: note.Description,
+	}
+	if err := dbClient.Table(notestableName).First(&ev, note.Id).Error; err != nil {
+		response.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(response).Encode("Note not found")
+		return
+	}
+	dbClient.Table(notestableName).Model(&ev).Updates(updatedNotes)
 	logger.Infof("Updated Event with Id:" + note.Id)
 	json.NewEncoder(response).Encode("Updated Event with Id:" + note.Id)
 }
