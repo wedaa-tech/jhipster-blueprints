@@ -5,11 +5,12 @@ import (
 	pb "<%= packageName %>/proto"
 	"context"
 	"encoding/json"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"net/http"
 )
 
 var mongoClient *mongo.Client
@@ -22,7 +23,7 @@ func InitializeMongoDb() {
 
 func AddEvent(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
-	_ = json.NewDecoder(request.Body).Decode(&event)
+	json.NewDecoder(request.Body).Decode(&event)
 	logger.Infof("%v", event)
 	collection := mongoClient.Database("<%= baseName %>").Collection("events")
 	result, err := collection.InsertOne(context.Background(), event)
@@ -82,7 +83,7 @@ func GetEvents(response http.ResponseWriter, request *http.Request) {
 func UpdateEvent(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	collection := mongoClient.Database("<%= baseName %>").Collection("events")
-	_ = json.NewDecoder(request.Body).Decode(&event)
+	json.NewDecoder(request.Body).Decode(&event)
 	filter := bson.D{{Key: "id", Value: event.Id}}
 	result, err := collection.ReplaceOne(context.Background(), filter, event)
 	if err != nil {

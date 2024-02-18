@@ -21,7 +21,7 @@ type Notes struct {
 func AddNote(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var note *pb.NotesRequest
-	_ = json.NewDecoder(request.Body).Decode(&note)
+	json.NewDecoder(request.Body).Decode(&note)
 	noteData := Notes{
 		Subject:     note.Subject,
 		Description: note.Description,
@@ -69,8 +69,8 @@ func UpdateNote(response http.ResponseWriter, request *http.Request) {
 	var note *pb.NotesResponse
 	var ev *pb.NotesResponse
 	var updatedNotes *pb.NotesRequest
-	_ = json.NewDecoder(request.Body).Decode(&note)
-	updatedNotes := pb.NotesRequest{
+	json.NewDecoder(request.Body).Decode(&note)
+	updatedNotes = pb.NotesRequest{
 		Subject:     note.Subject,
 		Description: note.Description,
 	}

@@ -4,10 +4,11 @@ import (
 	config "<%= packageName %>/db"
 	pb "<%= packageName %>/proto"
 	"encoding/json"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 var tableName = "event"
@@ -20,7 +21,7 @@ func InitializeDb() {
 func AddEvent(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var event *pb.Event
-	_ = json.NewDecoder(request.Body).Decode(&event)
+	json.NewDecoder(request.Body).Decode(&event)
 	e := dbClient.Table(tableName).Create(&event)
 	if e.Error != nil {
 		response.WriteHeader(http.StatusInternalServerError)
@@ -64,7 +65,7 @@ func UpdateEvent(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var event *pb.Event
 	var ev *pb.Event
-	_ = json.NewDecoder(request.Body).Decode(&event)
+	json.NewDecoder(request.Body).Decode(&event)
 	dbClient.Table(tableName).First(&ev, event.Id)
 	dbClient.Table(tableName).Model(&ev).Updates(event)
 	logger.Infof("Updated Event with Id:" + event.Id)
