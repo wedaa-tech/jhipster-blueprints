@@ -2,11 +2,12 @@ package eureka
 
 import (
 	app "<%= packageName %>/config"
-	"github.com/ArthurHlt/go-eureka-client/eureka"
-	"github.com/micro/micro/v3/service/logger"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/ArthurHlt/go-eureka-client/eureka"
+	"github.com/micro/micro/v3/service/logger"
 )
 
 func Client(w http.ResponseWriter, req *http.Request, restServer string) {
@@ -15,7 +16,7 @@ func Client(w http.ResponseWriter, req *http.Request, restServer string) {
 	client := eureka.NewClient([]string{cleanURL})
 	res, _ := client.GetApplication(restServer)
 	homePageURL := res.Instances[0].HomePageUrl
-	url := homePageURL + "api/services/" + restServer
+	url := homePageURL + "rest/services/" + restServer
 	clientWithAuth := &http.Client{
 		Transport: &headerTransport{
 			Transport: http.DefaultTransport,

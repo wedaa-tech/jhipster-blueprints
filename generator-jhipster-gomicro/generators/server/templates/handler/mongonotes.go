@@ -4,13 +4,14 @@ import (
 	pb "<%= packageName %>/proto"
 	"context"
 	"encoding/json"
+	"net/http"
+	"net/url"
+
 	"github.com/gorilla/mux"
 	"github.com/micro/micro/v3/service/logger"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"net/http"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"net/url"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var note pb.NotesResponse
@@ -18,15 +19,15 @@ var note pb.NotesResponse
 var noteCollection *mongo.Collection
 
 func InitializeMongoCollection() {
-	if(mongoClient!=nil){
-	noteCollection = mongoClient.Database("<%= baseName %>").Collection("notes")
+	if mongoClient != nil {
+		noteCollection = mongoClient.Database("<%= baseName %>").Collection("notes")
 	}
 }
 
 func AddNote(response http.ResponseWriter, request *http.Request) {
 	var notereq pb.NotesRequest
 	response.Header().Set("content-type", "application/json")
-	_ = json.NewDecoder(request.Body).Decode(&notereq)
+	json.NewDecoder(request.Body).Decode(&notereq)
 	res, err := noteCollection.InsertOne(context.Background(), notereq)
 	if err != nil {
 		logger.Errorf(err.Error())
@@ -36,14 +37,14 @@ func AddNote(response http.ResponseWriter, request *http.Request) {
 	} else {
 		objectID, ok := res.InsertedID.(primitive.ObjectID)
 		if !ok {
-		response.WriteHeader(http.StatusInternalServerError)
-		response.Write([]byte(`{ "message": "Invalid Id" }`))
-		return
+			response.WriteHeader(http.StatusInternalServerError)
+			response.Write([]byte(`{ "message": "Invalid Id" }`))
+			return
 		}
 		notesResponse := pb.NotesResponse{
-			Id:          objectID.Hex(), 
+			Id:          objectID.Hex(),
 			Description: notereq.Description,
-			Subject: notereq.Subject,
+			Subject:     notereq.Subject,
 		}
 		logger.Infof("Inserted Note with Id:" + notesResponse.Id)
 		json.NewEncoder(response).Encode(notesResponse)
@@ -92,7 +93,7 @@ func GetNotes(response http.ResponseWriter, request *http.Request) {
 
 func UpdateNote(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
-	_ = json.NewDecoder(request.Body).Decode(&note)
+	json.NewDecoder(request.Body).Decode(&note)
 	filter := bson.D{{Key: "_id", Value: note.Id}}
 	result, err := noteCollection.ReplaceOne(context.Background(), filter, note)
 	if err != nil {
