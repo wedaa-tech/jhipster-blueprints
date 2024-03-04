@@ -68,9 +68,8 @@ func UpdateNote(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	var note *pb.NotesResponse
 	var ev *pb.NotesResponse
-	var updatedNotes *pb.NotesRequest
 	json.NewDecoder(request.Body).Decode(&note)
-	updatedNotes = pb.NotesRequest{
+	updatedNotes := pb.NotesRequest{
 		Subject:     note.Subject,
 		Description: note.Description,
 	}
