@@ -9,36 +9,45 @@ This is a go-micro prototype generated using WeDAA, you can find documentation a
 ## Project Structure
 
 ```
-<%_ if (auth) { _%>
-├── auth/ (IdP configuration for keycloak)
-<%_ } _%>
-├── config/ (configuration properties loader)
-├── controllers/ (api controllers)
-<%_ if (postgresql || mongodb) { _%>
-├── db/ (DB connection configuration)
-<%_ } _%>
 ├── docker/ (contains docker compose files for external components based on architecture design)
-<%_ if (eureka) { _%>
-├── eurekaregistry/ (configuration for eureka service registry)
+├──src
+<%_ if (auth) { _%>
+    ├── auth/ (IdP configuration for keycloak)
+<%_ } _%>
+    ├── config/ (configuration properties and configuration properties loader)
+    ├── controllers/ (api controllers)
+<%_ if (postgresql || mongodb) { _%>
+    ├── db/ (DB connection configuration)
 <%_ } _%>
 <%_ if (postgresql || mongodb) { _%>
-├── handler/ (DB handler methods)
+    ├── reepository/ (Abstraction for CRUD operations)
+<%_ } _%>
+<%_ if (eureka) { _%>
+    ├── eurekaregistry/ (configuration for eureka service registry)
+<%_ } _%>
+<%_ if (postgresql || mongodb) { _%>
+    ├── handler/ (DB handler methods)
 <%_ } _%>
 <%_ if (postgresql) { _%>
-├── migrate/ (database schema change management)
+    ├── migrate/ (database schema change management)
 <%_ } _%>
-<%_ if (postgresql || mongodb) { _%>
-├── proto/ (proto files supporting DB models)
+<%_ if (postgresql || mongodb||rabbitmq) { _%>
+    ├── proto/ (proto definition supporting DB models and messaging)
+    ├──pb/ (proto files)
 <%_ } _%>
-<%_ if (rabbitmq) { _%>
-├── rabbitmq/ (message broker configuration)
+<%_ if (rabbitmq||restServer?.length) { _%>
+    ├──communication
+        ├── rabbitmq/ (message broker configuration)
+        ├──rest/ (client for rest call between services)
 <%_ } _%>
-├── resources/ (configuration properties)
+    ├── go.mod
+    └── main.go
 ├── Dockerfile (for packaging the application as docker image)
 ├── README.md (Project documentation)
+<%_ if (restServer?.length||rabbitmqClient?.length) { _%>
+├── COMMUNICATION.md (Communication documentation)
+<%_ } _%>
 ├── comm.yo-rc.json (generator configuration file for communications)
-├── go.mod
-└── main.go
 ```
 
 <%_ if (auth || eureka || postgresql || mongodb || rabbitmq) { _%>
@@ -74,7 +83,7 @@ Install required dependencies: `go mod tidy`
 
 Run the prototype locally: `go run .`
 
-Open [http://localhost:<%= serverPort %>/hello](http://localhost:<%= serverPort %>/hello) to view it in your browser.
+Open [http://localhost:<%= serverPort %>/management/health/readiness](http://localhost:<%= serverPort %>/management/health/readiness) to view it in your browser.
 
 The page will reload when you make changes.
 

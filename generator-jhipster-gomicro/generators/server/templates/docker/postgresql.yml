@@ -3,13 +3,18 @@ version: '3.8'
 name: <%= baseName %>
 services:
   go-postgresql:
-    image: postgres:14.5
+    image: postgres:15.2
     # volumes:
     #   - ~/volumes/jhipster/be2/postgresql/:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=<%= baseName %>
       - POSTGRES_PASSWORD=
       - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 10
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
     ports:
