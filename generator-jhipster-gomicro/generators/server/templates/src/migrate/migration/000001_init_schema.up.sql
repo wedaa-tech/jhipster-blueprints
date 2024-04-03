@@ -1,14 +1,3 @@
-  CREATE TABLE IF NOT EXISTS "event" (
-  "id" serial PRIMARY KEY,
-  "title" varchar,
-  "description" varchar
-);
-
-INSERT INTO "event" ("id","title", "description") VALUES
-  (1,'Event 1', 'Description of Event 1'),
-  (2,'Event 2', 'Description of Event 2'),
-  (3,'Event 3', 'Description of Event 3');
-
 CREATE TABLE IF NOT EXISTS "notes" (
   "id" integer generated always as identity,
   "subject" varchar,
