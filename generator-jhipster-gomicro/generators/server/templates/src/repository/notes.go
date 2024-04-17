@@ -3,6 +3,7 @@ package repository
 import (
  config "<%= packageName %>/db"
  pb "<%= packageName %>/pb"
+ "strconv"
 )
 
 var tableName = "notes"
@@ -46,6 +47,7 @@ func (nr *NoteRepository) UpdateNote(note *pb.NotesResponse) error {
 
 func (nr *NoteRepository) DeleteNote(id string) error {
 	var note *pb.NotesResponse
-	result := config.DatabaseClient.Table(tableName).Where("id = ?", id).Delete(&note)
+	Id, _ := strconv.Atoi(id)
+	result := config.DatabaseClient.Table(tableName).Where("id = ?", Id).Delete(&note)
 	return result.Error
 }

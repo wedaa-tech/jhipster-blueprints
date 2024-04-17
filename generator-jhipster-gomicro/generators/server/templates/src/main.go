@@ -11,7 +11,7 @@ import (
 	<%_ } _%>
  "github.com/micro/micro/v3/service/logger"
 	<%_ if (eureka){  _%>
- eureka "<%= packageName %>/eurekaregistry"
+ eureka "<%= packageName %>/serviceregistry"
  "github.com/google/uuid"
 	<%_ } _%>
 	<%_ if (postgresql||mongodb){  _%>
