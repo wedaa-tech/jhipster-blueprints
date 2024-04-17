@@ -1,14 +1,14 @@
 package handler
 
 import (
- "encoding/json"
- "net/http"
+	"encoding/json"
+	"net/http"
 
- pb "<%= packageName %>/pb"
- "<%= packageName %>/repository"
+	pb "<%= packageName %>/pb"
+	"<%= packageName %>/repository"
 
- "github.com/gorilla/mux"
- "github.com/micro/micro/v3/service/logger"
+	"github.com/gorilla/mux"
+	"github.com/micro/micro/v3/service/logger"
 )
 
 var noteRepository *repository.NoteRepository
@@ -70,8 +70,13 @@ func (nh *NoteHandler) UpdateNote(response http.ResponseWriter, request *http.Re
 }
 
 func (nh *NoteHandler) DeleteNote(response http.ResponseWriter, request *http.Request) {
-	params := mux.Vars(request)
-	id := params["id"]
+	query := request.URL.Query()
+	id := query.Get("id")
+	if id == "" {
+		http.Error(response, "ID parameter is missing", http.StatusBadRequest)
+		logger.Errorf("ID parameter is missing")
+		return
+	}
 	err := noteRepository.DeleteNote(id)
 	if err != nil {
 		logger.Errorf(err.Error())
