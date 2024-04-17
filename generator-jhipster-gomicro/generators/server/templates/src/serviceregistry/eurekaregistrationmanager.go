@@ -2,7 +2,7 @@ package eureka
 
 import (
  app "<%= packageName %>/config/loader"
- "<%= packageName %>/eurekaregistry/helper"
+ "<%= packageName %>/serviceregistry/helper"
  "github.com/carlescere/scheduler"
  "github.com/micro/micro/v3/service/logger"
  "os"
