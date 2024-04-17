@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import yosay from 'yosay';
 import ServerGenerator from 'generator-jhipster/generators/server';
 import { askForServerSideOpts } from './prompts.mjs';
-import { loadCommunicationConfigs, findConfigByBaseName, deleteUnwantedFiles } from './util.mjs';
+import { loadCommunicationConfigs, findConfigByBaseName, deleteUnwantedFiles,loadAppConfigs,loadDeploymentConfigs,processApiServersforClinet } from './util.mjs';
 
 export default class extends ServerGenerator {
   constructor(args, opts, features) {
@@ -161,8 +161,10 @@ export default class extends ServerGenerator {
         deleteUnwantedFiles.call(this);
       },
       writing() {
+        let appConfigs =  loadAppConfigs.call(this);
+        let apiServers = processApiServersforClinet.call(this);
+        let deploymentConfig = loadDeploymentConfigs.call(this);
         const matchingScenarios = findConfigByBaseName(this.baseName);
-
         if (matchingScenarios.length > 0) {
           var restServer = [],
             restClient,
@@ -203,55 +205,72 @@ export default class extends ServerGenerator {
           restClient: restClient,
           rabbitmqServer: rabbitmqServer,
           rabbitmqClient: rabbitmqClient,
+          apiServers: apiServers,
+          deploymentConfig: deploymentConfig,
+          minikube: appConfigs[0]['generator-jhipster'].minikube || false,
         };
 
         const templatePaths = [
-          { src: 'proto', dest: 'proto' },
-          { src: 'go.mod', dest: 'go.mod' },
-          { src: 'main.go', dest: 'main.go' },
+          { src: 'src/proto', dest: 'src/proto' },
+          { src: 'src/pb', dest:'src/pb' },
+          { src: 'src/go.mod', dest: 'src/go.mod' },
+          { src: 'src/main.go', dest: 'src/main.go' },
           { src: 'Dockerfile', dest: 'Dockerfile' },
           { src: 'README.md', dest: 'README.md' },
-          { src: 'config', dest: 'config' },
-          { src: 'resources', dest: 'resources' },
-          { src: 'controllers', dest: 'controllers' },
+          { src: 'src/config', dest: 'src/config' },
+          { src: 'src/controllers/base.go', dest: 'src/controllers/base.go' },
+          { src: 'src/controllers/management.go', dest: 'src/controllers/management.go' },
+          { src: 'docker/app.yml', dest: 'docker/app.yml'},
         ];
         const conditionalTemplates = [
-          { condition: this.auth, src: 'auth', dest: 'auth' },
+          { condition: this.auth, src: 'src/auth', dest: 'src/auth' },
           { condition: this.auth, src: 'docker/realm-config', dest: 'docker/realm-config' },
           { condition: this.auth, src: 'docker/keycloak.yml', dest: 'docker/keycloak.yml' },
-          { condition: this.postgress, src: 'handler/db.go', dest: 'handler/db.go' },
-          { condition: this.postgress, src: 'handler/notes.go', dest: 'handler/notes.go' },
-          { condition: this.postgress, src: 'db/config.go', dest: 'db/config.go' },
-          { condition: this.postgress, src: 'migrate', dest: 'migrate' },
+          { condition: this.postgress, src: 'src/repository/notes.go', dest: 'src/repository/notes.go' },
+          { condition: this.postgress, src: 'src/handler/notes.go', dest: 'src/handler/notes.go' },
+          { condition: this.postgress, src: 'src/db/postgres.go', dest: 'src/db/postgres.go' },
+          { condition: this.postgress, src: 'src/migrate', dest: 'src/migrate' },
           { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' },
-          { condition: this.mongodb, src: 'handler/mongodb.go', dest: 'handler/mongodb.go' },
-          { condition: this.mongodb, src: 'handler/mongonotes.go', dest: 'handler/mongonotes.go' },
-          { condition: this.mongodb, src: 'db/mongoconfig.go', dest: 'db/mongoconfig.go' },
+          { condition: this.postgress||this.mongodb, src: 'src/controllers/notes.go', dest: 'src/controllers/notes.go' },
+          { condition: this.mongodb, src: 'src/repository/mongonotes.go', dest: 'src/repository/notes.go' },
+          { condition: this.mongodb, src: 'src/handler/mongonotes.go', dest: 'src/handler/notes.go' },
+          { condition: this.mongodb, src: 'src/db/mongodb.go', dest: 'src/db/mongodb.go' },
           { condition: this.mongodb, src: 'docker/mongodb.yml', dest: 'docker/mongodb.yml' },
-          { condition: this.eureka, src: 'eurekaregistry/helper', dest: 'eurekaregistry/helper' },
+          { condition: this.eureka, src: 'src/serviceregistry/helper', dest: 'src/serviceregistry/helper' },
+          { condition: restServer?.length||restClient, src: 'src/controllers/communication.go', dest: 'src/controllers/communication.go' },
           {
             condition: this.eureka,
-            src: 'eurekaregistry/DiscoveryManager.go',
-            dest: 'eurekaregistry/DiscoveryManager.go',
+            src: 'src/serviceregistry/discoverymanager.go',
+            dest: 'src/serviceregistry/discoverymanager.go',
           },
           {
             condition: this.eureka,
-            src: 'eurekaregistry/RegistrationManager.go',
-            dest: 'eurekaregistry/RegistrationManager.go',
+            src: 'src/serviceregistry/registrationmanager.go',
+            dest: 'src/serviceregistry/registrationmanager.go',
           },
           {
             condition: this.eureka,
-            src: 'eurekaregistry/EurekaRegistrationManager.go',
-            dest: 'eurekaregistry/EurekaRegistrationManager.go',
+            src: 'src/serviceregistry/eurekaregistrationmanager.go',
+            dest: 'src/serviceregistry/eurekaregistrationmanager.go',
           },
           { condition: this.eureka, src: 'docker/central-server-config', dest: 'docker/central-server-config' },
           { condition: this.eureka, src: 'docker/jhipster-registry.yml', dest: 'docker/jhipster-registry.yml' },
           { condition: rabbitmq, src: 'docker/rabbitmq.yml', dest: 'docker/rabbitmq.yml' },
           {
             condition: restServer?.length,
-            src: 'eurekaregistry/ServiceDiscovery.go',
-            dest: 'eurekaregistry/ServiceDiscovery.go',
+            src: 'src/rest/restclient.go',
+            dest: 'src/communication/rest/restclient.go',
           },
+          {
+            condition:restServer?.length||rabbitmqClient?.length,
+            src: 'COMMUNICATION.md',
+            dest: 'COMMUNICATION.md',
+          },
+          {
+            condition:rabbitmqServer?.length||rabbitmqClient?.length||this.eureka||this.auth||this.mongodb||this.postgresql,
+            src: 'docker/services.yml',
+            dest: 'docker/services.yml',
+          }
         ];
         templatePaths.forEach(({ src, dest }) => {
           this.fs.copyTpl(this.templatePath(src), this.destinationPath(dest), templateVariables);
@@ -266,8 +285,8 @@ export default class extends ServerGenerator {
             var server = rabbitmqServer[i].charAt(0).toUpperCase() + rabbitmqServer[i].slice(1);
             var client = this.baseName.charAt(0).toUpperCase() + this.baseName.slice(1);
             this.fs.copyTpl(
-              this.templatePath('rabbitmq/consumer.go'),
-              this.destinationPath('rabbitmq/' + 'RabbitMQConsumer' + server + 'To' + client + '.go'),
+              this.templatePath('src/rabbitmq/consumer.go'),
+              this.destinationPath('src/communication/rabbitmq/' + 'rabbitmqconsumer' + server + 'to' + client + '.go'),
               {
                 packageName: this.packageName,
                 rabbitmqServer: server,
@@ -282,8 +301,8 @@ export default class extends ServerGenerator {
             var server = this.baseName.charAt(0).toUpperCase() + this.baseName.slice(1);
             var client = rabbitmqClient[i].charAt(0).toUpperCase() + rabbitmqClient[i].slice(1);
             this.fs.copyTpl(
-              this.templatePath('rabbitmq/producer.go'),
-              this.destinationPath('rabbitmq/' + 'RabbitMQProducer' + server + 'To' + client + '.go'),
+              this.templatePath('src/rabbitmq/producer.go'),
+              this.destinationPath('src/communication/rabbitmq/' + 'rabbitmqproducer' + server + 'to' + client + '.go'),
               {
                 packageName: this.packageName,
                 rabbitmqClient: client,

@@ -1,0 +1,36 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+name:  <%= baseName %>
+services:
+	<%_ if (postgresql){  _%>
+  go-postgresql:
+    extends:
+      file: ./postgresql.yml
+      service: go-postgresql
+  <%_ } _%>
+  <%_ if (mongodb){  _%>
+  mongodb:
+    extends:  
+     file: ./mongodb.yml
+     service: mongodb
+  <%_ } _%>
+  <%_ if (auth){  _%>
+  keycloak:
+    extends:
+      file: ./keycloak.yml
+      service: keycloak
+  <%_ } _%>
+  <%_ if (eureka){  _%>
+  jhipster-registry:
+    extends:
+      file: ./jhipster-registry.yml
+      service: jhipster-registry
+    depends_on:
+      keycloak:
+        condition: service_healthy
+  <%_ } _%>
+  <%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
+  rabbitmq:
+    extends:
+      file: ./rabbitmq.yml
+      service: rabbitmq
+  <%_ } _%>
