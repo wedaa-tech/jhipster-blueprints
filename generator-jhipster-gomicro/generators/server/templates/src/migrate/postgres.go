@@ -1,15 +1,15 @@
 package migrate
 
 import (
-	app "<%= packageName %>/config/loader"
-	"database/sql"
-	"strings"
+ app "<%= packageName %>/config/loader"
+ "database/sql"
+ "strings"
 
-	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
-	"github.com/micro/micro/v3/service/logger"
+ "github.com/golang-migrate/migrate/v4"
+ _ "github.com/golang-migrate/migrate/v4/database/postgres"
+ _ "github.com/golang-migrate/migrate/v4/source/file"
+ _ "github.com/lib/pq"
+ "github.com/micro/micro/v3/service/logger"
 )
 
 func generateUrl(databaseUrl, defaultDatabaseName, newDatabaseName string) string {

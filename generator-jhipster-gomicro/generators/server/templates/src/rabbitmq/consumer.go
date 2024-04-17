@@ -1,9 +1,9 @@
 package rabbitmq
 
 import (
-	"github.com/micro/micro/v3/service/logger"
-	"github.com/streadway/amqp"
-	app "<%= packageName %>/config/loader"
+ "github.com/micro/micro/v3/service/logger"
+ "github.com/streadway/amqp"
+ app "<%= packageName %>/config/loader"
 )
 
 func Consumer<%= rabbitmqServer %>To<%= rabbitmqClient %> () {

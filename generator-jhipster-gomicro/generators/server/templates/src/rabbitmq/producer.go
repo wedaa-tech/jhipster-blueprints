@@ -1,12 +1,12 @@
 package rabbitmq
 
 import (
-	"github.com/carlescere/scheduler"
-	"github.com/streadway/amqp"
-	"github.com/micro/micro/v3/service/logger"
-	app "<%= packageName %>/config/loader"
-	"time"
-	"encoding/json"
+ "github.com/carlescere/scheduler"
+ "github.com/streadway/amqp"
+ "github.com/micro/micro/v3/service/logger"
+ app "<%= packageName %>/config/loader"
+ "time"
+ "encoding/json"
 )
 
 func Producer<%= rabbitmqServer %>To<%= rabbitmqClient %>() {

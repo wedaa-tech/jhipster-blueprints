@@ -1,13 +1,13 @@
 package auth
 
 import (
-	app "<%= packageName %>/config/loader"
-	"context"
-	"encoding/json"
-	"github.com/Nerzal/gocloak/v13"
-	"github.com/micro/micro/v3/service/logger"
-	"net/http"
-	"strings"
+ app "<%= packageName %>/config/loader"
+ "context"
+ "encoding/json"
+ "github.com/Nerzal/gocloak/v13"
+ "github.com/micro/micro/v3/service/logger"
+ "net/http"
+ "strings"
 )
 
 var (

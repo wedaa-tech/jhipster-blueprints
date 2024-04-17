@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"context"
+ "context"
 
-	config "<%= packageName %>/db"
-	pb "<%= packageName %>/pb"
+ config "<%= packageName %>/db"
+ pb "<%= packageName %>/pb"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+ "go.mongodb.org/mongo-driver/bson"
+ "go.mongodb.org/mongo-driver/bson/primitive"
+ "go.mongodb.org/mongo-driver/mongo"
 )
 
 var collectionName = "notes"

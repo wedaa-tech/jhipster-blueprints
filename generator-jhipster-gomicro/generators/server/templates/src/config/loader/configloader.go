@@ -1,11 +1,11 @@
 package app
 
 import (
-	"github.com/kelseyhightower/envconfig"
-	"github.com/micro/micro/v3/service/logger"
-	"gopkg.in/yaml.v2"
-	"os"
-	"reflect"
+ "github.com/kelseyhightower/envconfig"
+ "github.com/micro/micro/v3/service/logger"
+ "gopkg.in/yaml.v2"
+ "os"
+ "reflect"
 )
 
 type Config struct {

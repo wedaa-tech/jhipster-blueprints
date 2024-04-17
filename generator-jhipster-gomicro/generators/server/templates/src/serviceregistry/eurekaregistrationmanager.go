@@ -1,14 +1,14 @@
 package eureka
 
 import (
-	app "<%= packageName %>/config/loader"
-	"<%= packageName %>/eurekaregistry/helper"
-	"github.com/carlescere/scheduler"
-	"github.com/micro/micro/v3/service/logger"
-	"os"
-	"runtime"
-	"strconv"
-	"time"
+ app "<%= packageName %>/config/loader"
+ "<%= packageName %>/eurekaregistry/helper"
+ "github.com/carlescere/scheduler"
+ "github.com/micro/micro/v3/service/logger"
+ "os"
+ "runtime"
+ "strconv"
+ "time"
 )
 
 type AppRegistrationBody struct {

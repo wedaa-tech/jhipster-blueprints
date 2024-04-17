@@ -2,29 +2,29 @@ package main
 
 import (
 	<%_ if (auth){  _%>
-	auth "<%= packageName %>/auth"
+ auth "<%= packageName %>/auth"
 	<%_ } _%>
-	"<%= packageName %>/controllers"
-	"github.com/asim/go-micro/v3"
+ "<%= packageName %>/controllers"
+ "github.com/asim/go-micro/v3"
 	<%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
-	rabbitmq "<%= packageName %>/communication/rabbitmq"
+ rabbitmq "<%= packageName %>/communication/rabbitmq"
 	<%_ } _%>
-	"github.com/micro/micro/v3/service/logger"
+ "github.com/micro/micro/v3/service/logger"
 	<%_ if (eureka){  _%>
-	eureka "<%= packageName %>/eurekaregistry"
-	"github.com/google/uuid"
+ eureka "<%= packageName %>/eurekaregistry"
+ "github.com/google/uuid"
 	<%_ } _%>
 	<%_ if (postgresql||mongodb){  _%>
-	config "<%= packageName %>/db"
+ config "<%= packageName %>/db"
 	<%_ } _%>
 	<%_ if (postgresql){  _%>	
-	"<%= packageName %>/migrate"
+ "<%= packageName %>/migrate"
 	<%_ } _%>
-	_ "github.com/jackc/pgx/v4/stdlib"
-	"net/http"
-	mhttp "github.com/go-micro/plugins/v3/server/http"
-   "github.com/gorilla/mux"
-	app "<%= packageName %>/config/loader"
+ _ "github.com/jackc/pgx/v4/stdlib"
+ "net/http"
+ mhttp "github.com/go-micro/plugins/v3/server/http"
+ "github.com/gorilla/mux"
+ app "<%= packageName %>/config/loader"
 )
 
 <%_ if (eureka){  _%>

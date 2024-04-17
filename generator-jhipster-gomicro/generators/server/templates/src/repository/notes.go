@@ -1,8 +1,8 @@
 package repository
 
 import (
-	config "<%= packageName %>/db"
-	pb "<%= packageName %>/pb"
+ config "<%= packageName %>/db"
+ pb "<%= packageName %>/pb"
 )
 
 var tableName = "notes"

@@ -1,13 +1,12 @@
 package config
 
 import (
-	app "<%= packageName %>/config/loader"
-	"context"
-	"time"
-
-	"github.com/micro/micro/v3/service/logger"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+ app "<%= packageName %>/config/loader"
+ "context"
+ "time"
+ "github.com/micro/micro/v3/service/logger"
+ "go.mongodb.org/mongo-driver/mongo"
+ "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var DatabaseClient *mongo.Client

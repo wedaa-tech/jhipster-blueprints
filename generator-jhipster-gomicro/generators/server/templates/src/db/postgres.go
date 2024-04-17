@@ -1,11 +1,11 @@
 package config
 
 import (
-	app "<%= packageName %>/config/loader"
+ app "<%= packageName %>/config/loader"
 
-	"github.com/micro/micro/v3/service/logger"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+ "github.com/micro/micro/v3/service/logger"
+ "gorm.io/driver/postgres"
+ "gorm.io/gorm"
 )
 
 var DatabaseClient *gorm.DB

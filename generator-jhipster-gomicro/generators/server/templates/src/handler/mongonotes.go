@@ -1,16 +1,16 @@
 package handler
 
 import (
-	"encoding/json"
-	"net/http"
-	"net/url"
+ "encoding/json"
+ "net/http"
+ "net/url"
 
-	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+ "github.com/gorilla/mux"
+ "go.mongodb.org/mongo-driver/bson/primitive"
 
-	pb "<%= packageName %>/pb"
-	repository "<%= packageName %>/repository"
-	"github.com/micro/micro/v3/service/logger"
+ pb "<%= packageName %>/pb"
+ repository "<%= packageName %>/repository"
+ "github.com/micro/micro/v3/service/logger"
 )
 
 var note pb.NotesResponse

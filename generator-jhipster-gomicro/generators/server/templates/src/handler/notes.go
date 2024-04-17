@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"encoding/json"
-	"net/http"
+ "encoding/json"
+ "net/http"
 
-	pb "<%= packageName %>/pb"
-	"<%= packageName %>/repository"
+ pb "<%= packageName %>/pb"
+ "<%= packageName %>/repository"
 
-	"github.com/gorilla/mux"
-	"github.com/micro/micro/v3/service/logger"
+ "github.com/gorilla/mux"
+ "github.com/micro/micro/v3/service/logger"
 )
 
 var noteRepository *repository.NoteRepository

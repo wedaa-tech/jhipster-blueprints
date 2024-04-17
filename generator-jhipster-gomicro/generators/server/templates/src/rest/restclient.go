@@ -1,15 +1,15 @@
 package rest
 
 import (
-	app "<%= packageName %>/config/loader"
-	"io"
-	"net/http"
-	"strings"
-	"encoding/json"
-	<%_ if (eureka){  _%>
-	"github.com/ArthurHlt/go-eureka-client/eureka"
-	<%_ } _%>
-	"github.com/micro/micro/v3/service/logger"
+ app "<%= packageName %>/config/loader"
+ "io"
+ "net/http"
+ "strings"
+ "encoding/json"
+<%_ if (eureka){  _%>
+ "github.com/ArthurHlt/go-eureka-client/eureka"
+<%_ } _%>
+ "github.com/micro/micro/v3/service/logger"
 )
 
 type ResponseData struct {
