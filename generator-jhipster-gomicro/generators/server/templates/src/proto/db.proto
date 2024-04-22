@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package db;
 
-option go_package = "./proto;db";
+option go_package = "<%= packageName %>/pb";
 
 message NotesRequest {
 	string subject =1;

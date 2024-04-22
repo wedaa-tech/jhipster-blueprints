@@ -5,6 +5,9 @@ This is a go-micro prototype generated using WeDAA, you can find documentation a
 ## Prerequisites
 
 - go version >= 1.20
+<%_ if (postgresql||mongodb) { _%>
+- protocol buffer compiler
+<%_ } _%>
 
 ## Project Structure
 
@@ -33,7 +36,7 @@ This is a go-micro prototype generated using WeDAA, you can find documentation a
 <%_ } _%>
 <%_ if (postgresql || mongodb||rabbitmq) { _%>
     ├── proto/ (proto definition supporting DB models and messaging)
-    ├──pb/ (proto files)
+    ├──pb/ (proto files after generation)
 <%_ } _%>
 <%_ if (rabbitmq||restServer?.length) { _%>
     ├──communication
@@ -76,6 +79,17 @@ Component details:
 
 On launch, <%= baseName %> will refuse to start if it is not able to connect to any of the above component(s).
 <%_ } _%>
+
+<%_ if (postgresql||mongodb) { _%>
+## Proto file generation
+
+Install protocol buffer compiler or protoc and install protocol buffer plugin for go
+
+Run the command to install proto files under the required folder: `protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative proto/*.proto` 
+
+Refer [Protocol buffer Doccumentation](https://protobuf.dev/getting-started/gotutorial) for more information on setting and generation of proto files in go.
+<%_ } _%>
+
 
 ## Get Started
 
