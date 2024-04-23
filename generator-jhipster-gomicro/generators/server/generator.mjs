@@ -211,8 +211,6 @@ export default class extends ServerGenerator {
         };
 
         const templatePaths = [
-          { src: 'src/proto', dest: 'src/proto' },
-          { src: 'src/pb', dest:'src/pb' },
           { src: 'src/go.mod', dest: 'src/go.mod' },
           { src: 'src/main.go', dest: 'src/main.go' },
           { src: 'Dockerfile', dest: 'Dockerfile' },
@@ -231,6 +229,7 @@ export default class extends ServerGenerator {
           { condition: this.postgress, src: 'src/db/postgres.go', dest: 'src/db/postgres.go' },
           { condition: this.postgress, src: 'src/migrate', dest: 'src/migrate' },
           { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' },
+          { condition: this.postgress||this.mongodb, src: 'src/proto', dest: 'src/proto' },
           { condition: this.postgress||this.mongodb, src: 'src/controllers/notes.go', dest: 'src/controllers/notes.go' },
           { condition: this.mongodb, src: 'src/repository/mongonotes.go', dest: 'src/repository/notes.go' },
           { condition: this.mongodb, src: 'src/handler/mongonotes.go', dest: 'src/handler/notes.go' },

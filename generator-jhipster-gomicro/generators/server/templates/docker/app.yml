@@ -1,8 +1,8 @@
 # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-name: a
+name: <%= baseName %>
 services:
   app:
-    image: a
+    image: <%= baseName %>
     environment:
       - GO_MICRO_SERVICE_PORT=<%= serverPort %>
       <%_ if (eureka){  _%>
@@ -25,12 +25,14 @@ services:
       <%_ if (mongodb){  _%>
       - GO_MICRO_MONGODB_URL=mongodb://mongodb:27017
       <%_ } _%>
+    ports:
+      - "<%= serverPort %>:<%= serverPort %>"    
     healthcheck:
       test:
         - CMD
         - curl
         - -f
-        - http://localhost:9000/management/health
+        - http://localhost:<%= serverPort %>/management/health
       interval: 5s
       timeout: 5s
       retries: 40
