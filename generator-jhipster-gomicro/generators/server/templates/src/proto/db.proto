@@ -14,8 +14,3 @@ message NotesResponse{
 	string subject =2;
 	string description=3;
 }
-
-message MyMessage {
-  string id = 1;
-  string data = 2;
-}
