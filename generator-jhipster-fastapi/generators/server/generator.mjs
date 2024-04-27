@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import yosay from 'yosay';
 import ServerGenerator from "generator-jhipster/generators/server";
+import { askForServerSideOpts } from './prompts.mjs';
 import { loadCommunicationConfigs, findConfigByBaseName, deleteUnwantedFiles, loadAppConfigs, loadDeploymentConfigs, processApiServersforClinet } from './util.mjs';
 
 export default class extends ServerGenerator {
@@ -33,8 +34,8 @@ export default class extends ServerGenerator {
         // Have Yeoman greet the user.
         this.log(yosay(`${chalk.red('fastapi-blueprint')}`));
       },
-      // askForServerSideOpts,
-      // loadCommunicationConfigs,
+      askForServerSideOpts,
+      loadCommunicationConfigs,
 
     };
   }
@@ -164,7 +165,54 @@ export default class extends ServerGenerator {
         deleteUnwantedFiles.call(this);
       },
       writing() {
-        // TODO: Writing blueprint Files
+
+        const templateVariables = {
+          serverPort: this.serverPort,
+          packageName: this.packageName,
+          baseName: this.baseName,
+          auth: this.auth,
+          eureka: this.eureka,
+          // rabbitmq: rabbitmq,
+          postgresql: this.postgress,
+          mongodb: this.mongodb,
+          databasePort: this.databasePort,
+          // restServer: restServer,
+          // restClient: restClient,
+          // rabbitmqServer: rabbitmqServer,
+          // rabbitmqClient: rabbitmqClient,
+          // apiServers: apiServers,
+          // deploymentConfig: deploymentConfig,
+          // minikube: appConfigs[0]['generator-jhipster'].minikube || false,
+        };
+
+        const templatePaths = [
+          { src: 'app/api', dest: 'app/api' },
+          { src: 'app/core/log_config.py', dest: 'app/core/log_config.py' },
+          { src: 'app/services/app_details.py', dest: 'app/services/app_details.py' },
+          { src: 'app/main.py', dest: 'app/main.py' },
+          { src: 'app/.env', dest: 'app/.env' },
+          { src: 'docker/', dest: 'docker/' },
+          { src: '.dockerignore', dest: '.dockerignore' },
+          { src: '.gitignore', dest: '.gitignore' },
+          { src: 'Dockerfile', dest: 'Dockerfile' },
+          { src: 'README.md', dest: 'README.md' },
+          { src: 'requirements.txt', dest: 'requirements.txt' },
+        ];
+
+        const conditionalTemplates = [
+          { condition: this.auth, src: 'app/core/auth.py', dest: 'app/core/auth.py' },
+        ]
+
+        templatePaths.forEach(({ src, dest }) => {
+          this.fs.copyTpl(this.templatePath(src), this.destinationPath(dest), templateVariables);
+        });
+
+        conditionalTemplates.forEach(({ condition, src, dest }) => {
+          if (condition) {
+            this.fs.copyTpl(this.templatePath(src), this.destinationPath(dest), templateVariables);
+          }
+        });
+
       },
     };
   }
