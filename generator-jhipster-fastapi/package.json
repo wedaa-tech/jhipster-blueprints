@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "generator-jhipster": "7.10.0"
+    "generator-jhipster": "file:/home/rakesh/WeDaa/generator-jhipster",
+    "yosay": "^2.0.2"
   },
   "devDependencies": {
     "ejs-lint": "2.0.0",
@@ -44,7 +45,7 @@
     "prettier": "2.8.7",
     "prettier-plugin-java": "",
     "prettier-plugin-packagejson": "",
-    "yeoman-test": "7.4.0"
+    "yeoman-test": "8.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
