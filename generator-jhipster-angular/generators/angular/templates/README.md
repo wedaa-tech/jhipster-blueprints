@@ -7,6 +7,12 @@ This is an angular application prototype, generated using WeDAA. You can find do
 - Node version >= 18
 - npm version >= 9.6
 - docker version >= 24
+<%_ if (oauth2 && eureka) { _%>
+- For Keycloak to work with Service Discovery in local(docker) environment, following line must be added to your hosts file `/etc/hosts`
+  ```
+  127.0.0.1	keycloak
+  ```
+<%_ } _%>
 
 ## Project Structure
 

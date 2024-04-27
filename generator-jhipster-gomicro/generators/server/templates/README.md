@@ -8,6 +8,12 @@ This is a go-micro prototype generated using WeDAA, you can find documentation a
 <%_ if (postgresql||mongodb) { _%>
 - protocol buffer compiler
 <%_ } _%>
+<%_ if (auth && eureka) { _%>
+- For Keycloak to work with Service Discovery in local(docker) environment, following line must be added to your hosts file `/etc/hosts`
+  ```
+  127.0.0.1	keycloak
+  ```
+<%_ } _%>
 
 ## Project Structure
 
