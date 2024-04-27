@@ -1,5 +1,7 @@
 import chalk from "chalk";
+import yosay from 'yosay';
 import ServerGenerator from "generator-jhipster/generators/server";
+import { loadCommunicationConfigs, findConfigByBaseName, deleteUnwantedFiles, loadAppConfigs, loadDeploymentConfigs, processApiServersforClinet } from './util.mjs';
 
 export default class extends ServerGenerator {
   constructor(args, opts, features) {
@@ -18,148 +20,152 @@ export default class extends ServerGenerator {
 
   get [ServerGenerator.INITIALIZING]() {
     return {
-      ...super.initializing,
-      async initializingTemplateTask() {},
+      // ...super.initializing,
+      // async initializingTemplateTask() {},
     };
   }
 
   get [ServerGenerator.PROMPTING]() {
     return {
-      ...super.prompting,
-      async promptingTemplateTask() {},
+      // ...super.prompting,
+      // async promptingTemplateTask() {},
+      prompting() {
+        // Have Yeoman greet the user.
+        this.log(yosay(`${chalk.red('fastapi-blueprint')}`));
+      },
+      // askForServerSideOpts,
+      // loadCommunicationConfigs,
+
     };
   }
 
   get [ServerGenerator.CONFIGURING]() {
     return {
-      ...super.configuring,
-      async configuringTemplateTask() {},
+      // ...super.configuring,
+      // async configuringTemplateTask() {},
     };
   }
 
   get [ServerGenerator.COMPOSING]() {
     return {
-      ...super.composing,
-      async composingTemplateTask() {},
+      // ...super.composing,
+      // async composingTemplateTask() {},
     };
   }
 
   get [ServerGenerator.LOADING]() {
     return {
-      ...super.loading,
-      async loadingTemplateTask() {},
+      // ...super.loading,
+      // async loadingTemplateTask() {},
     };
   }
 
   get [ServerGenerator.PREPARING]() {
     return {
-      ...super.preparing,
-      async preparingTemplateTask() {},
+      // ...super.preparing,
+      // async preparingTemplateTask() {},
     };
   }
 
   get [ServerGenerator.CONFIGURING_EACH_ENTITY]() {
     return {
-      ...super.configuringEachEntity,
-      async configuringEachEntityTemplateTask() {},
+      // ...super.configuringEachEntity,
+      // async configuringEachEntityTemplateTask() {},
     };
   }
 
   get [ServerGenerator.LOADING_ENTITIES]() {
     return {
-      ...super.loadingEntities,
-      async loadingEntitiesTemplateTask() {},
+      // ...super.loadingEntities,
+      // async loadingEntitiesTemplateTask() {},
     };
   }
 
   get [ServerGenerator.PREPARING_EACH_ENTITY]() {
     return {
-      ...super.preparingEachEntity,
-      async preparingEachEntityTemplateTask() {},
+      // ...super.preparingEachEntity,
+      // async preparingEachEntityTemplateTask() {},
     };
   }
 
   get [ServerGenerator.PREPARING_EACH_ENTITY_FIELD]() {
     return {
-      ...super.preparingEachEntityField,
-      async preparingEachEntityFieldTemplateTask() {},
+      // ...super.preparingEachEntityField,
+      // async preparingEachEntityFieldTemplateTask() {},
     };
   }
 
   get [ServerGenerator.PREPARING_EACH_ENTITY_RELATIONSHIP]() {
     return {
-      ...super.preparingEachEntityRelationship,
-      async preparingEachEntityRelationshipTemplateTask() {},
+      // ...super.preparingEachEntityRelationship,
+      // async preparingEachEntityRelationshipTemplateTask() {},
     };
   }
 
   get [ServerGenerator.POST_PREPARING_EACH_ENTITY]() {
     return {
-      ...super.postPreparingEachEntity,
-      async postPreparingEachEntityTemplateTask() {},
+      // ...super.postPreparingEachEntity,
+      // async postPreparingEachEntityTemplateTask() {},
     };
   }
 
   get [ServerGenerator.DEFAULT]() {
     return {
-      ...super.default,
-      async defaultTemplateTask() {},
+      // ...super.default,
+      // async defaultTemplateTask() {},
     };
   }
 
   get [ServerGenerator.WRITING]() {
     return {
-      ...super.writing,
-      async writingTemplateTask() {
-        await this.writeFiles({
-          sections: {
-            files: [{ templates: ["template-file-server"] }],
-          },
-          context: this,
-        });
-      },
+      // ...super.writing,
     };
   }
 
   get [ServerGenerator.WRITING_ENTITIES]() {
     return {
-      ...super.writingEntities,
-      async writingEntitiesTemplateTask() {},
+      // ...super.writingEntities,
+      // async writingEntitiesTemplateTask() {},
     };
   }
 
   get [ServerGenerator.POST_WRITING]() {
     return {
-      ...super.postWriting,
-      async postWritingTemplateTask() {},
+      // ...super.postWriting,
+      // async postWritingTemplateTask() {},
     };
   }
 
   get [ServerGenerator.POST_WRITING_ENTITIES]() {
     return {
-      ...super.postWritingEntities,
-      async postWritingEntitiesTemplateTask() {},
+      // ...super.postWritingEntities,
+      // async postWritingEntitiesTemplateTask() {},
     };
   }
 
   get [ServerGenerator.INSTALL]() {
     return {
-      ...super.install,
-      async installTemplateTask() {},
+      // ...super.install,
+      // async installTemplateTask() {},
     };
   }
 
   get [ServerGenerator.POST_INSTALL]() {
     return {
-      ...super.postInstall,
-      async postInstallTemplateTask() {},
+      // ...super.postInstall,
+      // async postInstallTemplateTask() {},
     };
   }
 
   get [ServerGenerator.END]() {
     return {
       ...super.end,
-      async endTemplateTask() {},
+      async endTemplateTask() {
+        deleteUnwantedFiles.call(this);
+      },
+      writing() {
+        // TODO: Writing blueprint Files
+      },
     };
   }
 }
