@@ -195,6 +195,7 @@ export default class extends ReactGenerator {
           { src: "package-lock.json", dest: "package-lock.json" },          
           { src: "package.json", dest: "package.json" },          
 		      {src :".env",dest:".env"},
+          {src:'README.md',dest:'README.md'},
           {src:'Dockerfile',dest:'Dockerfile'},
           {src:'.env.production',dest:'.env.production'},
           {src:'src/app/favicon.ico',dest:'src/app/favicon.io'},
