@@ -1,0 +1,12 @@
+{
+  "generator-jhipster": {
+    "additionalSubGenerators": "",
+    "baseName": "nextjs",
+    "cli": false,
+    "entities": [],
+    "jhipsterVersion": "7.10.0",
+    "localBlueprint": false,
+    "skipCommitHook": true,
+    "subGenerators": []
+  }
+}
