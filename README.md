@@ -88,3 +88,10 @@ and add the above piece of code into the jdl file.
 
 Run the following command:-
 > jhipster jdl ./test.jdl --skip-install --skip-git --skip-jhipster-dependencies
+
+
+#  "generator-jhipster": "file:/home/rakesh/WeDaa/generator-jhipster",
+
+## need to update the version of 
+        "yeoman-test": "8.0.0" 
+        when we generate the blueprint !!
