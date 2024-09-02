@@ -2,7 +2,7 @@ import chalk from "chalk";
 import yosay from 'yosay';
 import ServerGenerator from "generator-jhipster/generators/server";
 import { askForServerSideOpts } from './prompts.mjs';
-import { loadCommunicationConfigs, findConfigByBaseName, deleteUnwantedFiles, loadAppConfigs, loadDeploymentConfigs, processApiServersforClinet } from './util.mjs';
+import { loadCommunicationConfigs, findConfigByBaseName, deleteUnwantedFiles, loadAppConfigs, loadDeploymentConfigs, processApiServersforClinet , loadServicesWithAndWithOutDB} from './util.mjs';
 
 export default class extends ServerGenerator {
   constructor(args, opts, features) {
@@ -160,12 +160,49 @@ export default class extends ServerGenerator {
 
   get [ServerGenerator.END]() {
     return {
-      ...super.end,
-      async endTemplateTask() {
+      // ...super.end,
+
+      // async endTemplateTask() {}
+      endTemplateTask() {  
         deleteUnwantedFiles.call(this);
       },
       writing() {
+        let appConfigs = loadAppConfigs.call(this);
+        let apiServers = processApiServersforClinet.call(this);
+        let deploymentConfig = loadDeploymentConfigs.call(this);
+        let {servicesWithDB, servicesWithoutDB} = loadServicesWithAndWithOutDB.call(this);
+        
+        const matchingScenarios = findConfigByBaseName(this.baseName);
+        if (matchingScenarios.length > 0) {
+          var restServer = [],
+            restClient,
+            rabbitmqServer = [],
+            rabbitmqClient = [],
+            rabbitmq = false;
 
+
+        for (var options of matchingScenarios) {
+          if (options.framework === 'rest-api') {
+            if (options.server) {
+              restServer.push(options.server);
+            }
+            if (options.client) {
+              restClient = options.client;
+            }
+          } else if (options.framework === 'rabbitmq') {
+            rabbitmq = true;
+            if (options.server) {
+              rabbitmqServer.push(options.server);
+            }
+            if (options.client) {
+              rabbitmqClient.push(options.client);
+            }
+          }
+        }
+      }
+      
+        
+        
         const templateVariables = {
           serverPort: this.serverPort,
           packageName: this.packageName,
@@ -176,13 +213,15 @@ export default class extends ServerGenerator {
           postgresql: this.postgress,
           mongodb: this.mongodb,
           databasePort: this.databasePort,
-          // restServer: restServer,
-          // restClient: restClient,
+          restServer: restServer,
+          restClient: restClient,
           // rabbitmqServer: rabbitmqServer,
           // rabbitmqClient: rabbitmqClient,
-          // apiServers: apiServers,
-          // deploymentConfig: deploymentConfig,
-          // minikube: appConfigs[0]['generator-jhipster'].minikube || false,
+          servicesWithDB: servicesWithDB,
+          servicesWithoutDB: servicesWithoutDB,
+          apiServers: apiServers,
+          deploymentConfig: deploymentConfig,
+          minikube: appConfigs[0]['generator-jhipster'].minikube || false,
         };
 
         const templatePaths = [
@@ -201,6 +240,10 @@ export default class extends ServerGenerator {
 
         const conditionalTemplates = [
           { condition: this.auth, src: 'app/core/auth.py', dest: 'app/core/auth.py' },
+          { condition: this.postgress, src: 'app/core/postgres.py', dest: 'app/core/postgres.py' },
+          { condition: this.mongodb, src: 'app/core/mongodb.py', dest: 'app/core/mongodb.py' },
+          { condition: this.eureka, src: 'app/core/eureka.py', dest: 'app/core/eureka.py' }, 
+          { condition: restServer?.length || restClient, src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
         ]
 
         templatePaths.forEach(({ src, dest }) => {

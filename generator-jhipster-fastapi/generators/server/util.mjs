@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+// import databaseTypes from '/Users/konda/Documents/wedaa/generator-jhipster/dist/jdl/jhipster/database-types.js';
 
 let communications = [];
 
@@ -101,20 +102,46 @@ export function deleteUnwantedFiles() {
 
 export function processApiServersforClinet() {
   let communications = loadCommunicationConfigs.call(this);
-  let appConfigs = loadAppConfigs.call(this);
+  let appConfigs = loadAppConfigs.call(this); 
   let apiServers = [];
-
+  let clientBaseName = this.baseName; 
+  
   appConfigs.forEach(appConfig => {
     const { baseName, serverPort } = appConfig['generator-jhipster'];
-    const matchingCommunication = communications.find(comm => comm.server === baseName && comm.client === this.baseName);
+    
+    const matchingCommunication = communications.find(comm => {
+      console.log('Comparing:', comm.server, baseName, comm.client, clientBaseName);
+      return comm.server === baseName && comm.client === clientBaseName;
+    });
+    
     if (matchingCommunication) {
-      let nodePort = appConfig['generator-jhipster'].applicationIndex  + 30200;  // app node port start's from 30200
+      let nodePort = appConfig['generator-jhipster'].applicationIndex  + 30200;  // app node port starts from 30200
       apiServers.push({ baseName, serverPort, nodePort });
     }
   });
+  
+  console.log('API Servers:', apiServers);  // Final output
   return apiServers;
 }
 
+
+export function loadServicesWithAndWithOutDB() {
+  let communications = loadCommunicationConfigs.call(this);
+  let appConfigs = loadAppConfigs.call(this);
+  let servicesWithOutDB = [];
+  let servicesWithDB = [];
+
+  appConfigs.forEach(appConfig => {
+    const { baseName, databaseType } = appConfig['generator-jhipster'];
+    const matchingCommunication = communications.find(comm => comm.server === baseName && comm.client === this.baseName);
+    if (matchingCommunication && databaseType === 'no') {
+      servicesWithOutDB.push(baseName);
+    } else if (matchingCommunication&& databaseType !== 'no'){
+      servicesWithDB.push(baseName);
+    }
+  });
+  return {servicesWithDB, servicesWithOutDB};
+}
 
 
 export { communications };

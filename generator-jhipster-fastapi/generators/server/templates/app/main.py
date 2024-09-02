@@ -1,34 +1,62 @@
 from dotenv import load_dotenv
-
-load_dotenv()
-
-import os
 from fastapi import FastAPI
 import uvicorn
 from api.main import api_router
-
-# from core import db
+<%_ if (mongodb){  _%>
+from core import mongodb
+<%_ } _%>
+<%_ if (postgresql){  _%>
+from core import postgres
+<%_ } _%>
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+import os
+import logging
+<%_ if (eureka) { _%>
+from core import eureka
+<%_ } _%>
 
-# def startup_event():
-#     """
-#     Executes all startup events for the application.
+load_dotenv()
+# generate some text
 
-#     This function is called when the application starts up to execute all necessary startup events,
-#     including initializing services, and setting up configurations.
+SERVER_PORT = int(os.getenv("SERVER_PORT", 9001))
 
-#     Raises:
-#         Exception: If there is an error during any of the startup events.
-#     """
-#     db.connect_to_mongodb()
-APP_NAME = os.getenv("APP_NAME")
-APP_VERSION = os.getenv("APP_VERSION")
-APP_DISCRIPTION = os.getenv("APP_DISCRIPTION")
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-app = FastAPI(title=APP_NAME, version=APP_VERSION, description=APP_DISCRIPTION)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # This will run when the application starts
+    <%_ if (mongodb){  _%>
+    await mongodb.connect_to_mongodb()
+    <%_ } _%>
+    <%_ if (postgresql){  _%>
+    await postgres.connect_to_postgresql()  # Connect to PostgreSQL
+    <%_ } _%>
+
+    <%_ if (eureka) { _%>
+    await eureka.startup_event()
+    <%_ } _%>
+
+    yield  # The application will run here
+    # This will run when the application stops
+    <%_ if (mongodb){  _%>
+    await mongodb.disconnect_from_mongodb()
+    <%_ } _%>
+    <%_ if (postgresql){  _%>
+    await postgres.disconnect_from_postgresql()  # Disconnect from PostgreSQL
+    <%_ } _%>
+    <%_ if (eureka) { _%>
+    await eureka.shutdown_event()
+    <%_ } _%>
+    logger.info("Shutting down...")
+
+app = FastAPI(lifespan=lifespan)
+
 
 origins = [
-    # List of origins
     "http://localhost:3000",
     "http://localhost:3001",
 ]
@@ -41,12 +69,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.add_event_handler("startup", startup_event)
 app.include_router(api_router)
 
-
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=<%= serverPort %>, reload=True)
-
-
-
+    uvicorn.run("main:app", host="localhost", port=SERVER_PORT, reload=True)
