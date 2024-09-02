@@ -5,9 +5,10 @@ import os
 async def get_service_url(rest_server: str):
     # Retrieve the service URL from environment variables
     service_url = os.getenv(f"COMMUNICATION_{rest_server.upper()}")
+    print(f"Retrieved service URL for {rest_server}: {service_url}")
     if not service_url:
         raise HTTPException(status_code=500, detail=f"Service URL not found for {rest_server}")
-    return service_url + f"/rest/services/{rest_server}"
+    return service_url + f"/api/app-details"
 
 async def communicate_with_service(request: Request, rest_server: str, auth: bool = False):
     try:
@@ -27,11 +28,3 @@ async def communicate_with_service(request: Request, rest_server: str, auth: boo
 
     except httpx.HTTPError as e:
         raise HTTPException(status_code=500, detail=f"Error communicating with the service: {str(e)}")
-
-
-
-@app.get("/communicate/{rest_server}")
-async def communicate(request: Request, rest_server: str, auth: bool = False):
-    response_data = await communicate_with_service(request, rest_server, auth)
-    print("Response data:", response_data)
-    return response_data

@@ -209,14 +209,14 @@ export default class extends ServerGenerator {
           baseName: this.baseName,
           auth: this.auth,
           eureka: this.eureka,
-          // rabbitmq: rabbitmq,
+          rabbitmq: rabbitmq,
           postgresql: this.postgress,
           mongodb: this.mongodb,
           databasePort: this.databasePort,
           restServer: restServer,
           restClient: restClient,
-          // rabbitmqServer: rabbitmqServer,
-          // rabbitmqClient: rabbitmqClient,
+          rabbitmqServer: rabbitmqServer,
+          rabbitmqClient: rabbitmqClient,
           servicesWithDB: servicesWithDB,
           servicesWithoutDB: servicesWithoutDB,
           apiServers: apiServers,
@@ -243,6 +243,7 @@ export default class extends ServerGenerator {
           { condition: this.postgress, src: 'app/core/postgres.py', dest: 'app/core/postgres.py' },
           { condition: this.mongodb, src: 'app/core/mongodb.py', dest: 'app/core/mongodb.py' },
           { condition: this.eureka, src: 'app/core/eureka.py', dest: 'app/core/eureka.py' }, 
+          { condition: rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
           { condition: restServer?.length || restClient, src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
         ]
 
@@ -255,6 +256,40 @@ export default class extends ServerGenerator {
             this.fs.copyTpl(this.templatePath(src), this.destinationPath(dest), templateVariables);
           }
         });
+
+        if (rabbitmqServer?.length) {
+          for (var i = 0; i < rabbitmqServer.length; i++) {
+            var server = rabbitmqServer[i].charAt(0).toUpperCase() + rabbitmqServer[i].slice(1);
+            var client = this.baseName.charAt(0).toUpperCase() + this.baseName.slice(1);
+            this.fs.copyTpl(
+              this.templatePath('app/core/rabbitmq/consumer.py'),
+              this.destinationPath('app/core/rabbitmq/' + 'RabbitMQConsumer' + server + 'To' + client + '.py'),
+              {
+                packageName: this.packageName,
+                rabbitmqServer: server,
+                rabbitmqClient: client,
+                baseName: this.baseName,
+              }
+            );
+          }
+        }
+
+        if (rabbitmqClient?.length) {
+          for (var i = 0; i < rabbitmqClient.length; i++) {
+            var server = this.baseName.charAt(0).toUpperCase() + this.baseName.slice(1);
+            var client = rabbitmqClient[i].charAt(0).toUpperCase() + rabbitmqClient[i].slice(1);
+            this.fs.copyTpl(
+              this.templatePath('app/core/rabbitmq/producer.py'),
+              this.destinationPath('app/core/rabbitmq/' + 'RabbitMQProducer' + server + 'To' + client + '.py'),
+              {
+                packageName: this.packageName,
+                rabbitmqClient: client,
+                rabbitmqServer: server,
+                baseName: this.baseName,
+              }
+            );
+          }
+        }
 
       },
     };

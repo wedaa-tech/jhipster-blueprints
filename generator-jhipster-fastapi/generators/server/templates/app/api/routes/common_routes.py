@@ -16,3 +16,4 @@ router = APIRouter()
 def get_app_details():
     app_details = fetch_app_details()
     return app_details
+
