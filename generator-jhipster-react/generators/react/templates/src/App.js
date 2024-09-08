@@ -17,8 +17,16 @@ import PrivateRoute from './config/auth/privateRoute';
 <%_  if( servicesWithDB.length > 0 ) { _%>
 import NotesList from './components/notes/NotesList';
 <%_ } _%> 
+<%_  if( servicesWithDB.length > 0 ) { _%>
+  import { useAuth } from 'react-oidc-context';
+  <%_ } _%> 
 
 function App() {
+
+  <%_  if( servicesWithDB.length > 0 ) { _%>
+    const auth = useAuth();
+  <%_ } _%> 
+
   return (
     <div className="App">
       <NavBar />
@@ -42,7 +50,14 @@ function App() {
             <PrivateRoute>
             <%_ } _%> 
               <div className="swagger">
-                <SwaggerUI url={process.env.REACT_APP_MICROSERVICE_<%= appServer.baseName.toUpperCase() %>.concat("/v3/api-docs")} />
+                <%_ if (oauth2) { _%>
+                    <SwaggerUI requestInterceptor={(request)=>{
+                      request.headers.Authorization = `Bearer ${auth.user.access_token}`
+                      return request;
+                    }} url={process.env.REACT_APP_MICROSERVICE_<%= appServer.baseName.toUpperCase() %>.concat("/v3/api-docs")} />
+                 <%_ } else { _%>
+                  <SwaggerUI url={process.env.REACT_APP_MICROSERVICE_<%= appServer.baseName.toUpperCase() %>.concat("/v3/api-docs")} />
+                  <%_ } _%>
               </div>
             <%_ if (oauth2) { _%>
             </PrivateRoute>
