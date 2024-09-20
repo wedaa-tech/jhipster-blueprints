@@ -177,8 +177,7 @@ export default class extends ServerGenerator {
           var restServer = [],
             restClient,
             rabbitmqServer = [],
-            rabbitmqClient = [],
-            rabbitmq = false;
+            rabbitmqClient = []
 
 
         for (var options of matchingScenarios) {
@@ -190,7 +189,6 @@ export default class extends ServerGenerator {
               restClient = options.client;
             }
           } else if (options.framework === 'rabbitmq') {
-            rabbitmq = true;
             if (options.server) {
               rabbitmqServer.push(options.server);
             }
@@ -209,7 +207,6 @@ export default class extends ServerGenerator {
           baseName: this.baseName,
           auth: this.auth,
           eureka: this.eureka,
-          rabbitmq: rabbitmq,
           postgresql: this.postgress,
           mongodb: this.mongodb,
           databasePort: this.databasePort,
@@ -221,6 +218,8 @@ export default class extends ServerGenerator {
           servicesWithoutDB: servicesWithoutDB,
           apiServers: apiServers,
           deploymentConfig: deploymentConfig,
+          rabbitmq: this.rabbitmq,
+
           minikube: appConfigs[0]['generator-jhipster'].minikube || false,
         };
 
@@ -243,7 +242,7 @@ export default class extends ServerGenerator {
           { condition: this.postgress, src: 'app/core/postgres.py', dest: 'app/core/postgres.py' },
           { condition: this.mongodb, src: 'app/core/mongodb.py', dest: 'app/core/mongodb.py' },
           { condition: this.eureka, src: 'app/core/eureka.py', dest: 'app/core/eureka.py' }, 
-          { condition: rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
+          { condition: this.rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
           { condition: restServer?.length || restClient, src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
         ]
 

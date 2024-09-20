@@ -7,7 +7,8 @@ export async function askForServerSideOpts() {
         this.baseName=this.jhipsterConfigWithDefaults.baseName;
         this.auth=(this.jhipsterConfigWithDefaults.authenticationType=="oauth2")
         this.eureka=(this.jhipsterConfigWithDefaults.serviceDiscoveryType=="eureka")
-        this.rabbitmq=(this.jhipsterConfigWithDefaults.messageBroker=="rabbitmq")
+        this.rabbitmq = this.jhipsterConfigWithDefaults.messageBroker === 'rabbitmq';
+
         this.postgress=(this.jhipsterConfigWithDefaults.prodDatabaseType=="postgresql")
         this.mongodb=(this.jhipsterConfigWithDefaults.databaseType=="mongodb")
         this.databasePort=this.jhipsterConfigWithDefaults.databasePort;
