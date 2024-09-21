@@ -55,7 +55,7 @@ python3 app/main.py
 ## Run the application in Dev using gunicorn
 
 ```
-gunicorn main:app --workers 5 --worker-class uvicorn.workers.UvicornWorker --bind localhost:9001
+gunicorn main:app --workers 5 --worker-class uvicorn.workers.UvicornWorker --bind localhost:<%= serverPort %>
 ```
 
 NOTE:
