@@ -1,27 +1,46 @@
-# Running the Docusaurus-Generator in Local
+# Docusaurus Generator
 
-## prerequisites
-* [Node.js](https://nodejs.org/en/download/)
-* [Yeoman](https://yeoman.io/learning/index.html)
-### Instructions
+- Docusaurus Generator is generated via Yeoman generator.
 
-Install project dependencies and symlink a global module to the local file.
+- Yeoman generators are scaffolding tools that help automate the setup of new projects by generating boilerplate code and structure based on predefined templates.
+
+## Install node modules 
+
+```
+npm install
+```
+
+## Link Docusaurus Generator
+
+- Create a symbolic Link for the Wedaa Version of docusaurus generator to global node_modules.
+
+- Use below given commands:
+
 ```
 npm link
 ```
 
-Run Yeoman Generator to scaffold a sample Docusaurus application
-```
-yo docusaurus
-```
-If you wish to give custom name for your Project then run the command as
-```
-yo docusaurus --file inputfile.json
-```
-For giving input add your .json file to the generator directory. Example:-
+## Usage
+
+- Run Yeoman Generator to scaffold a sample Docusaurus application.
+
+-  Input support: `json file`
+
+- Example json file.
+
 ```
 {
     "applicationName": "Test_gen111",
     "serverPort": 5000
 }
+```
+
+- As of now Docusaurus Generator supports two input keys: `applicationName`, `serverPort`
+ 
+- Create a sample json file with these two keys.
+
+- Use the below cmd to run the Docusaurus Generator:
+
+```
+yo docusaurus --file sample.json
 ```

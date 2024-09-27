@@ -1,27 +1,54 @@
-# Description for Angular
+# Angular Blueprint 
 
- This is the blueprint for Angular sub-generator
+WeDAA version Angular blueprint [generator-jhipster-angular](https://github.com/wedaa-tech/jhipster-blueprints/tree/main/generator-jhipster-angular)
 
-# How to use ? 
-- Change the reference of the jhipster in the package.json 
 
-- Open package.json under dependencies replace the reference
-   of the jhipster if you are working in local environment.
+## Linking with Jhipster
 
-- For example:- 
-  `````
-    "generator-jhipster": "file:/home/rakesh/TIC/generator-jhipster",
-  ``````
-    
-- Run npm install (for the first time).
-- Run npm link generator-jhipster-angular.
-
-# Getting started 
-
-- Use example.jdl file to generate the angluar application [which you can find in root directory]
-
-- how to apply?
+- Update jhipster dependencies in package.json 
 
 ```
-jhipster jdl ./example.jdl --skip-install --skip-git --no-insight --skip-jhipster-dependencies 
+"dependencies": {
+    "chalk": "4.1.2",
+    "generator-jhipster": "file:/usr/src/app/generator-jhipster",
+    "yosay": "^2.0.2"
+  }
 ```
+- Above given dependencies block need to be updated like this:
+
+```
+"dependencies": {
+    "chalk": "4.1.2",
+    "generator-jhipster": "file:/Users/craxkumar/WeDAA/generator-jhipster",
+    "yosay": "^2.0.2"
+  }
+```
+
+- `file:/Users/craxkumar/WeDAA/generator-jhipster` this is the absolute path of generator-jhipster, which will be different from machine to machine. Make sure to change it accordingly.
+
+- This will allow the blueprint to refer the locally installed WeDAA version jhpister.
+
+- **NOTE**: Never push the local filepath to github.
+
+## Install node modules 
+
+```
+npm install
+```
+
+## Link Angular Blueprint
+
+- Create a symbolic Link for the Wedaa Version of angular blueprint to global node_modules.
+
+- Use below given commands:
+
+```
+npm link
+```
+```
+npm link generator-jhipster-angular
+```
+
+- This will link the global symlinked package to the local project's node_modules
+
+- For more details refer [Official blueprints](https://www.jhipster.tech/modules/official-blueprints/)
