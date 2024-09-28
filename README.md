@@ -132,6 +132,16 @@ application {
  
 - Create a sample jdl file with the above give content.
 
+## need to update the version of 
+        "yeoman-test": "8.0.0" 
+        when we generate the blueprint !!
+- additionaly it also support two more keys: `databasePort`, `logManagementType`
+
+-  `blueprints [blueprint_name]` key is to be mentioned to use the blueprint.
+
+ 
+- Create a sample jdl file with the above give content.
+
 - Use the below cmd to run the jhipster with blueprint:
 
 ```
