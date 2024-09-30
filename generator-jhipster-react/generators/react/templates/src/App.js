@@ -17,13 +17,13 @@ import PrivateRoute from './config/auth/privateRoute';
 <%_  if( servicesWithDB.length > 0 ) { _%>
 import NotesList from './components/notes/NotesList';
 <%_ } _%> 
-<%_  if( servicesWithDB.length > 0 ) { _%>
+<%_  if( oauth2 ) { _%>
   import { useAuth } from 'react-oidc-context';
   <%_ } _%> 
 
 function App() {
 
-  <%_  if( servicesWithDB.length > 0 ) { _%>
+  <%_  if( oauth2 ) { _%>
     const auth = useAuth();
   <%_ } _%> 
 
