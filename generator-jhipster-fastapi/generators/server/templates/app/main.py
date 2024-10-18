@@ -19,7 +19,7 @@ from core import eureka
 load_dotenv()
 # generate some text
 
-SERVER_PORT = int(os.getenv("SERVER_PORT", 9001))
+SERVER_PORT = int(os.getenv("SERVER_PORT", <%= serverPort != null ? serverPort : 9001 %>))
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
