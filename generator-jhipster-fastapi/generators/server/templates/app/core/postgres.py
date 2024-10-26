@@ -1,7 +1,6 @@
 import os
 import asyncpg
 import logging
-from contextlib import asynccontextmanager
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -10,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 # Global variable for the connection pool
 connection_pool = None
 
-async def connect_to_postgresql():
+async def connect_postgresql():
     """Attempt to connect to PostgreSQL and set up a connection pool."""
     global connection_pool
     try:
@@ -27,10 +26,8 @@ async def connect_to_postgresql():
             await connection.fetchval('SELECT 1')
 
         logger.info("PostgreSQL connected successfully!")
-        print("PostgreSQL connected successfully!")
     except Exception as e:
         logger.error(f"Error connecting to PostgreSQL: {e}")
-        print(f"Error connecting to PostgreSQL: {e}")
         raise
 
 async def disconnect_postgresql():
@@ -39,5 +36,4 @@ async def disconnect_postgresql():
     if connection_pool:
         await connection_pool.close()
         logger.info("PostgreSQL connection closed.")
-        print("PostgreSQL connection closed.")
 

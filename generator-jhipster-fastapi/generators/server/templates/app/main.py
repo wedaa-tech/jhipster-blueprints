@@ -33,7 +33,7 @@ async def lifespan(app: FastAPI):
     await mongodb.connect_to_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
-    await postgres.connect_to_postgresql()  # Connect to PostgreSQL
+    await postgres.connect_postgresql()  # Connect to PostgreSQL
     <%_ } _%>
 
     <%_ if (eureka) { _%>
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI):
     await mongodb.disconnect_from_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
-    await postgres.disconnect_from_postgresql()  # Disconnect from PostgreSQL
+    await postgres.disconnect_postgresql()  # Disconnect from PostgreSQL
     <%_ } _%>
     <%_ if (eureka) { _%>
     await eureka.shutdown_event()
@@ -57,8 +57,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
+    "*", # This configuration is intended for development purpose, it's **your** responsibility to harden it for production
 ]
 
 app.add_middleware(

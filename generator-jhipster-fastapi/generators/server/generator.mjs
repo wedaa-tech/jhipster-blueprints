@@ -229,7 +229,6 @@ export default class extends ServerGenerator {
           { src: 'app/services/app_details.py', dest: 'app/services/app_details.py' },
           { src: 'app/main.py', dest: 'app/main.py' },
           { src: 'app/.env', dest: 'app/.env' },
-          { src: 'docker/', dest: 'docker/' },
           { src: '.dockerignore', dest: '.dockerignore' },
           { src: '.gitignore', dest: '.gitignore' },
           { src: 'Dockerfile', dest: 'Dockerfile' },
@@ -239,8 +238,15 @@ export default class extends ServerGenerator {
 
         const conditionalTemplates = [
           { condition: this.auth, src: 'app/core/auth.py', dest: 'app/core/auth.py' },
+          { condition: this.auth, src: 'docker/keycloak.yml', dest: 'docker/keycloak.yml' },
+          { condition: this.auth, src: 'realm-config/', dest: 'realm-config/' },
+
           { condition: this.postgress, src: 'app/core/postgres.py', dest: 'app/core/postgres.py' },
+          { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' }, 
+
           { condition: this.mongodb, src: 'app/core/mongodb.py', dest: 'app/core/mongodb.py' },
+          { condition: this.mongodb, src: 'docker/mongodb.yml', dest: 'docker/mongodb.yml' },
+
           { condition: this.eureka, src: 'app/core/eureka.py', dest: 'app/core/eureka.py' }, 
           { condition: this.rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
           { condition: restServer?.length || restClient, src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
