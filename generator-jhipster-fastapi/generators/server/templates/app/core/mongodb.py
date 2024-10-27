@@ -19,7 +19,7 @@ def get_database():
     """Return the connected database."""
     return database
 
-async def connect_to_mongodb():
+async def connect_mongodb():
     """Attempt to connect to MongoDB and set the global client and database."""
     global client, database
     try:
@@ -43,22 +43,18 @@ async def connect_to_mongodb():
         await client.server_info()  # Ensures the connection is valid
 
         logger.info("Database connected successfully!")
-        print("Database connected successfully!")
     except Exception as e:
         logger.error(f"Error connecting to database: {e}")
-        print(f"Error connecting to database: {e}")
         raise
 
 
 
-async def disconnect_from_mongodb():
+async def disconnect_mongodb():
     """Disconnect from MongoDB."""
     global client
     if client:
         client.close()
         logger.info("Database disconnected successfully!")
-        print("Database disconnected successfully!")
     else:
-        logger.info("Database was not connected.")
-        print("Database was not connected.")
+        logger.info("Database not connected.")
         

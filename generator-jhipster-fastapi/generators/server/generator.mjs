@@ -239,7 +239,7 @@ export default class extends ServerGenerator {
         const conditionalTemplates = [
           { condition: this.auth, src: 'app/core/auth.py', dest: 'app/core/auth.py' },
           { condition: this.auth, src: 'docker/keycloak.yml', dest: 'docker/keycloak.yml' },
-          { condition: this.auth, src: 'realm-config/', dest: 'realm-config/' },
+          { condition: this.auth, src: 'docker/realm-config/', dest: 'docker/realm-config/' },
 
           { condition: this.postgress, src: 'app/core/postgres.py', dest: 'app/core/postgres.py' },
           { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' }, 
@@ -247,7 +247,12 @@ export default class extends ServerGenerator {
           { condition: this.mongodb, src: 'app/core/mongodb.py', dest: 'app/core/mongodb.py' },
           { condition: this.mongodb, src: 'docker/mongodb.yml', dest: 'docker/mongodb.yml' },
 
+          
           { condition: this.eureka, src: 'app/core/eureka.py', dest: 'app/core/eureka.py' }, 
+          { condition: this.eureka, src: 'docker/jhipster-registry.yml', dest: 'docker/jhipster-registry.yml' }, 
+          { condition: this.eureka, src: 'docker/central-server-config/', dest: 'docker/central-server-config/' }, 
+
+
           { condition: this.rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
           { condition: restServer?.length || restClient, src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
         ]

@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     # This will run when the application starts
     <%_ if (mongodb){  _%>
-    await mongodb.connect_to_mongodb()
+    await mongodb.connect_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
     await postgres.connect_postgresql()  # Connect to PostgreSQL
@@ -43,7 +43,7 @@ async def lifespan(app: FastAPI):
     yield  # The application will run here
     # This will run when the application stops
     <%_ if (mongodb){  _%>
-    await mongodb.disconnect_from_mongodb()
+    await mongodb.disconnect_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
     await postgres.disconnect_postgresql()  # Disconnect from PostgreSQL

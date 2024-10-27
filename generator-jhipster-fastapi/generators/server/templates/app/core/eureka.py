@@ -1,3 +1,4 @@
+import uuid
 from py_eureka_client import eureka_client
 from dotenv import load_dotenv
 from fastapi import APIRouter
@@ -11,11 +12,7 @@ load_dotenv()
 
 EUREKA_SERVER = os.getenv("EUREKA_SERVER_URL")
 APP_NAME = os.getenv("APP_NAME")
-PORT = os.getenv("SERVER_PORT")    
-OTHER_SERVICE_NAME = os.getenv("OTHER_SERVICE_NAME")
-EUREKA_SERVER_INSTANCES = os.getenv("EUREKA_SERVER_INSTANCES")
-PUBLIC_IP = os.getenv("PUBLIC_IP", "0.0.0.0")
-OTHER_SERVICE_URL = os.getenv("OTHER_SERVICE_URL")
+APP_PORT = os.getenv("SERVER_PORT")    
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,10 +25,12 @@ router = APIRouter(
 async def startup_event():
     logger.info("Starting Eureka client...")
     try:
+        instance_id = APP_NAME + ':' + uuid.uuid4().hex
         await eureka_client.init_async(
             eureka_server=EUREKA_SERVER,
             app_name=APP_NAME,
-            instance_port=int(PORT)
+            instance_id=instance_id,
+            instance_port=int(APP_PORT)
         )
         logger.info(f"Service {APP_NAME} registered successfully with Eureka at {EUREKA_SERVER}")
     except Exception as e:
@@ -40,7 +39,7 @@ async def startup_event():
 async def shutdown_event():
     logger.info("Shutting down Eureka client...")
     try:
-        await eureka_client.fini_async()
+        await eureka_client.stop_async()
         logger.info("Eureka client shut down successfully.")
     except Exception as e:
         logger.error(f"Failed to shut down Eureka client: {e}")
