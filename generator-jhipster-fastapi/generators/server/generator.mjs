@@ -255,6 +255,7 @@ export default class extends ServerGenerator {
 
 
           { condition: this.rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
+          { condition: this.rabbitmq, src: 'docker/rabbitmq.yml', dest: 'app/core/rabbitmq.yml' },
           { condition: ((restServer?.length || restClient) && !this.eureka), src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
         ]
 
