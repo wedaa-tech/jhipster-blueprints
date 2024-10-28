@@ -21,8 +21,8 @@ def get_app_details():
     return app_details
 
 <%_ if (restServer?.length && !eureka && apiServers){ apiServers.forEach((appServer) =>  { _%>
-@router.get("/trigger-communication")
-async def trigger_communication(request: Request):
+@router.get("/rest/services/<%= appServer.baseName %>")
+async def communicate_<%= appServer.baseName %>(request: Request):
     response = await communicate_with_service(request, rest_server="<%= appServer.baseName %>")
     return response
 <%_ })} _%>

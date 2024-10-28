@@ -234,6 +234,7 @@ export default class extends ServerGenerator {
           { src: 'Dockerfile', dest: 'Dockerfile' },
           { src: 'README.md', dest: 'README.md' },
           { src: 'requirements.txt', dest: 'requirements.txt' },
+          { src: 'start.sh', dest: 'start.sh' },
         ];
 
         const conditionalTemplates = [
