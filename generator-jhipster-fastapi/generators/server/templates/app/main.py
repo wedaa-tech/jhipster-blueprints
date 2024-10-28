@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
 import uvicorn
-from api.main import api_router
+from api.router_config import api_router
 <%_ if (mongodb){  _%>
 from core import mongodb
 <%_ } _%>
@@ -71,4 +71,4 @@ app.add_middleware(
 app.include_router(api_router)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=SERVER_PORT, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=SERVER_PORT, reload=True)

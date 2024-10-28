@@ -9,8 +9,9 @@ fastapi_keycloak==1.0.10
 <%_ } _%>
 gunicorn==21.2.0
 uvicorn==0.27.1
-<%_ if(eureka) { _%>    
-py-eureka-client==0.11.9<%_ } _%><%_ if(postgresql) { _%>
+<%_ if(eureka) { _%>
+py-eureka-client==0.11.9
+<%_ } _%><%_ if(postgresql) { _%>
 asyncpg==0.29.0
 SQLAlchemy==2.0.25
 sqlmodel==0.0.14

@@ -1,11 +1,8 @@
 import uuid
 from py_eureka_client import eureka_client
 from dotenv import load_dotenv
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 import os
-import requests
-import json
-import xmltodict
 import logging
 
 load_dotenv()
@@ -18,8 +15,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 router = APIRouter(
-    prefix='/<%= baseName %>',
-    tags=['<%= baseName %>']
+    prefix='/rest/services'
 )
 
 async def startup_event():
@@ -44,44 +40,16 @@ async def shutdown_event():
     except Exception as e:
         logger.error(f"Failed to shut down Eureka client: {e}")
 
-@router.get("/get_other")
-def get_other():
+<%_ if (restServer?.length && apiServers){ apiServers.forEach((appServer) =>  { _%>
+@router.get("/<%= appServer.baseName %>")
+async def <%= appServer.baseName %>():
     try:
-        response = requests.get(EUREKA_SERVER_INSTANCES)
-        response.raise_for_status()  # Raises an exception for HTTP errors
-    except requests.RequestException as e:
-        logger.error(f"Failed to fetch instances from Eureka: {e}")
-        return {"error": "Failed to fetch instances from Eureka"}
-    
-    app_name = OTHER_SERVICE_NAME
-    xml_string = response.text  
-    response_app_url = xml_to_json(xml_string, app_name)
-    
-    if "error" in response_app_url:
-        return {"error": response_app_url["error"]}
+        app = await eureka_client.do_service_async(app_name="<%= appServer.baseName %>", service="/rest/services/<%= appServer.baseName %>", return_type="json")
+        return app
+       
+    except Exception as e:
+        # Handle other exceptions
+        print("An error occurred:", e)
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
-    return {"response_app_url": response_app_url}
-
-def xml_to_json(xml_string, app_name):
-    data_dict = xmltodict.parse(xml_string)
-    json_string = json.dumps(data_dict)
-    json_file = json.loads(json_string)
-
-    # Extract application information
-    applications = json_file.get("applications", {}).get("application", [])
-   
-    for application in applications:
-        if application.get("name") == app_name:
-            instances = application.get("instance", [])
-            if not isinstance(instances, list):
-                instances = [instances]
-            for instance in instances:
-                ip_address = instance.get("ipAddr", "")
-                port = instance.get("port", {}).get("#text", "")
-                base_url = f"http://{ip_address}:{port}"
-                response_app_url = f"{base_url}{OTHER_SERVICE_URL}"
-                logger.info(f"Resolved service URL: {response_app_url}")
-                response = requests.get(response_app_url)
-                return response.json()
-           
-    return {"error": "No instance found for the given app name"}
+<%_ })} _%>

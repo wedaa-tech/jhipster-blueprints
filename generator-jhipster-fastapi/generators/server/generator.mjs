@@ -255,7 +255,7 @@ export default class extends ServerGenerator {
 
 
           { condition: this.rabbitmq, src: 'app/core/rabbitmq', dest: 'app/core/rabbitmq' },
-          { condition: restServer?.length || restClient, src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
+          { condition: ((restServer?.length || restClient) && !this.eureka), src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
         ]
 
         templatePaths.forEach(({ src, dest }) => {
