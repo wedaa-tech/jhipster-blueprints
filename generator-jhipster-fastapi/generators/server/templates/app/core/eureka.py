@@ -44,7 +44,7 @@ async def shutdown_event():
 @router.get("/<%= appServer.baseName %>")
 async def <%= appServer.baseName %>():
     try:
-        app = await eureka_client.do_service_async(app_name="<%= appServer.baseName %>", service="/rest/services/<%= appServer.baseName %>", return_type="json")
+        app = await eureka_client.do_service_async(app_name="<%= appServer.baseName %>", service="/api/services/<%= appServer.baseName %>", return_type="json")
         return app
        
     except Exception as e:

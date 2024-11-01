@@ -228,6 +228,8 @@ export default class extends ServerGenerator {
           { src: 'app/core/log_config.py', dest: 'app/core/log_config.py' },
           { src: 'app/services/app_details.py', dest: 'app/services/app_details.py' },
           { src: 'app/main.py', dest: 'app/main.py' },
+          { src: 'app/gunicorn_dev_config.py', dest: 'app/gunicorn_dev_config.py' },
+          { src: 'app/gunicorn_prod_config.py', dest: 'app/gunicorn_prod_config.py' },
           { src: 'app/.env', dest: 'app/.env' },
           { src: '.dockerignore', dest: '.dockerignore' },
           { src: '.gitignore', dest: '.gitignore' },

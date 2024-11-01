@@ -12,9 +12,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
 import logging
-<%_ if (eureka) { _%>
-from core import eureka
-<%_ } _%>
 
 load_dotenv()
 # generate some text
@@ -28,30 +25,22 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # This will run when the application starts
+    logger.info("Starting FastAPI application.")
     <%_ if (mongodb){  _%>
     await mongodb.connect_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
-    await postgres.connect_postgresql()  # Connect to PostgreSQL
+    await postgres.connect_postgresql()
     <%_ } _%>
 
-    <%_ if (eureka) { _%>
-    await eureka.startup_event()
-    <%_ } _%>
-
-    yield  # The application will run here
-    # This will run when the application stops
+    yield 
+    logger.info("Stopping FastAPI application.")
     <%_ if (mongodb){  _%>
     await mongodb.disconnect_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
-    await postgres.disconnect_postgresql()  # Disconnect from PostgreSQL
+    await postgres.disconnect_postgresql()
     <%_ } _%>
-    <%_ if (eureka) { _%>
-    await eureka.shutdown_event()
-    <%_ } _%>
-    logger.info("Shutting down...")
 
 app = FastAPI(lifespan=lifespan)
 

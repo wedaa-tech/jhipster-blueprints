@@ -15,10 +15,43 @@ This is a fastapi prototype generated using WeDAA, you can find documentation an
 ## Project Structure
 
 
+<%_ if (auth || eureka || postgresql || mongodb || rabbitmq) { _%>
+## Dependencies
+
+This application is configured to work with external component(s).
+
+Docker compose files are provided for the same to get started quickly.
+
+Component details:
+<%_ if (auth) { _%>
+- Keycloak as Identity Management: `docker compose -f docker/keycloak.yml up -d`
+<%_ } _%>
+<%_ if (eureka) { _%>
+- Eureka Service Discovery: `docker compose -f docker/jhipster-registry.yml up -d`
+<%_ } _%>
+<%_ if (postgresql) { _%>
+- Postgresql DB: `docker compose -f docker/postgresql.yml up -d`
+<%_ } _%>
+<%_ if (mongodb) { _%>
+- mongoDB: `docker compose -f docker/mongodb.yml up -d`
+<%_ } _%>
+<%_ if (rabbitmq) { _%>
+- RabbitMQ message broker: `docker compose -f docker/rabbitmq.yml up -d`
+<%_ } _%>
+
+On launch, <%= baseName %> will refuse to start if it is not able to connect to any of the above component(s).
+<%_ } _%>
+
 
 ## Get Started
 
-1. Create a new virtual env  
+Run the `./start.sh` script to quickly get started.
+
+Or 
+
+Manually Step: 
+
+1. Create a new virtual env
 ```
 python -m venv .venv
 ```
@@ -33,31 +66,16 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Run the application
+4. Enter the `app/` directory, Run the FastAPI application: 
 ```
-python3 app/main.py
-```
-
-## Run the application in DEV Mode
-
-cd app/
-
-```
-uvicorn main:app --port=9001 --reload
+gunicorn -c gunicorn_dev_config.py main:app
 ```
 
-OR
 
-```
-python3 app/main.py
-```
+Open [http://localhost:<%= serverPort %>/management/health/readiness](http://localhost:<%= serverPort %>/management/health/readiness) to view it in your browser.
 
-## Run the application in Dev using gunicorn
+## Containerization
 
-```
-gunicorn main:app --workers 5 --worker-class uvicorn.workers.UvicornWorker --bind localhost:<%= serverPort %>
-```
+Build the docker image: `docker build -t <%= baseName %>:latest .`
 
-NOTE:
-1) --workers <int> :Number of worker processes.
-2) --worker flag will be ignored when using with --reload flag.
+Start the container: `docker run -d -p <%= serverPort %>:<%= serverPort %> <%= baseName %>:latest`
