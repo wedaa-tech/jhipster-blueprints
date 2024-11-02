@@ -22,7 +22,7 @@ from core import eureka
 # ===============================================
 
 # bind - The server socket to bind
-bind = "0.0.0.0:9000" 
+bind = "0.0.0.0:<%= serverPort != null ? serverPort : 9001 %>" 
 
 # ===============================================
 #           Worker Processes

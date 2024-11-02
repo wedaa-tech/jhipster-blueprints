@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI
 import uvicorn
 from api.router_config import api_router
@@ -13,8 +14,6 @@ from contextlib import asynccontextmanager
 import os
 import logging
 
-load_dotenv()
-# generate some text
 
 SERVER_PORT = int(os.getenv("SERVER_PORT", <%= serverPort != null ? serverPort : 9001 %>))
 

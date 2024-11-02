@@ -15,6 +15,8 @@ py-eureka-client==0.11.9
 asyncpg==0.29.0
 SQLAlchemy==2.0.25
 sqlmodel==0.0.14
+alembic==1.13.3
+greenlet==3.1.1
 <%_ } _%>
 fastapi_auth_middleware==1.0.2
 xmltodict==0.13.0

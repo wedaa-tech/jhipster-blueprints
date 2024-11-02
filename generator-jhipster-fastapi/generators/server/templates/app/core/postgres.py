@@ -1,39 +1,31 @@
 import os
-import asyncpg
-import logging
+from typing import AsyncGenerator
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+from core.log_config import logger
 
-# Configure logger
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+# Set up your PostgreSQL URL
+POSTGRESQL_DB_URL = os.getenv("POSTGRESQL_DB_URL")
 
-# Global variable for the connection pool
-connection_pool = None
+# Create an async SQLAlchemy engine
+async_engine = create_async_engine(POSTGRESQL_DB_URL, echo=True)
+
+# Create an async session maker
+AsyncSessionLocal = sessionmaker(
+    async_engine, expire_on_commit=False, class_=AsyncSession
+)
+
+# Dependency to get the session
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    async with AsyncSessionLocal() as session:
+        yield session
 
 async def connect_postgresql():
-    """Attempt to connect to PostgreSQL and set up a connection pool."""
-    global connection_pool
-    try:
-        # Fetch PostgreSQL URL from environment variables
-        postgres_db_url = os.getenv('POSTGRESQL_DB_URL')
-        if not postgres_db_url:
-            raise ValueError("POSTGRESQL_DB_URL is not set")
-
-        # Initialize the connection pool
-        connection_pool = await asyncpg.create_pool(postgres_db_url)
-
-        # Verify the connection by acquiring and releasing a connection
-        async with connection_pool.acquire() as connection:
-            await connection.fetchval('SELECT 1')
-
+    async with async_engine.begin() as connection:
+        await connection.execute(text("SELECT 1"))
         logger.info("PostgreSQL connected successfully!")
-    except Exception as e:
-        logger.error(f"Error connecting to PostgreSQL: {e}")
-        raise
 
 async def disconnect_postgresql():
-    """Close the PostgreSQL connection pool."""
-    global connection_pool
-    if connection_pool:
-        await connection_pool.close()
-        logger.info("PostgreSQL connection closed.")
-
+    await async_engine.dispose()  # This will close all connections in the pool
+    logger.info("PostgreSQL connection pool closed.")

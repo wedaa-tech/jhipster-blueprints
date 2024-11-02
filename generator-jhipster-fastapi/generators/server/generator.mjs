@@ -224,7 +224,8 @@ export default class extends ServerGenerator {
         };
 
         const templatePaths = [
-          { src: 'app/api', dest: 'app/api' },
+          { src: 'app/api/routes', dest: 'app/api/routes' },
+          { src: 'app/api/router_config.py', dest: 'app/api/router_config.py' },
           { src: 'app/core/log_config.py', dest: 'app/core/log_config.py' },
           { src: 'app/services/app_details.py', dest: 'app/services/app_details.py' },
           { src: 'app/main.py', dest: 'app/main.py' },
@@ -246,6 +247,15 @@ export default class extends ServerGenerator {
 
           { condition: this.postgress, src: 'app/core/postgres.py', dest: 'app/core/postgres.py' },
           { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' }, 
+
+          { condition: this.postgress, src: 'app/migrations/postgres/', dest: 'app/migrations/' }, 
+          
+          { condition: this.postgress, src: 'app/api/postgres/note_routes.py', dest: 'app/api/routes/note_routes.py' }, 
+          { condition: this.postgress, src: 'app/models/postgres/note.py', dest: 'app/models/note.py' }, 
+          { condition: this.postgress, src: 'app/repository/postgres/note_repository.py', dest: 'app/repository/note_repository.py' }, 
+          { condition: this.postgress, src: 'app/services/postgres/note_service.py', dest: 'app/services/note_service.py' },
+          { condition: this.postgress, src: 'app/alembic.ini', dest: 'app/alembic.ini' }, 
+          
 
           { condition: this.mongodb, src: 'app/core/mongodb.py', dest: 'app/core/mongodb.py' },
           { condition: this.mongodb, src: 'docker/mongodb.yml', dest: 'docker/mongodb.yml' },
