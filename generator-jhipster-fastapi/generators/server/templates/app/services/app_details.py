@@ -1,10 +1,6 @@
 import os
 from core.log_config import logger
 
-from core.log_config import logger
-from dotenv import load_dotenv
-
-
 APP_NAME = os.getenv("APP_NAME", "app")
 
 

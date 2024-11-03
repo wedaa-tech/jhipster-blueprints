@@ -4,6 +4,10 @@ from models.note import Note
 from typing import List
 from core.postgres import get_db  # Import your database session dependency
 from sqlalchemy.ext.asyncio import AsyncSession
+<%_ if (auth) { _%>
+from core.auth import get_auth
+<%_ } _%>
+
 
 router = APIRouter()
 
@@ -11,24 +15,24 @@ router = APIRouter()
 def get_note_service(db: AsyncSession = Depends(get_db)) -> NoteService:
     return NoteService(session=db)
 
-@router.post("/notes", response_model=Note)
+@router.post("/notes", response_model=Note<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def create_note(note: Note, notes_service: NoteService = Depends(get_note_service)):
     return await notes_service.create_note_service(
         subject=note.subject, description=note.description
     )
 
-@router.get("/notes/{note_id}", response_model=Note)
+@router.get("/notes/{note_id}", response_model=Note<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def get_note(note_id: int, notes_service: NoteService = Depends(get_note_service)):
     note = await notes_service.get_note_service(note_id)
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
 
-@router.get("/notes", response_model=List[Note])
+@router.get("/notes", response_model=List[Note]<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def get_all_notes(notes_service: NoteService = Depends(get_note_service)):
     return await notes_service.get_all_notes_service()
 
-@router.delete("/notes/{note_id}")
+@router.delete("/notes/{note_id}"<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def delete_note(note_id: int, notes_service: NoteService = Depends(get_note_service)):
     success = await notes_service.delete_note_service(note_id)
     if not success:

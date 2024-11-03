@@ -14,7 +14,9 @@ from core import eureka
 <%_ } _%>
 
 
-api_router = APIRouter()
+api_router = APIRouter(
+    prefix='/api'
+)
 
 
 api_router.include_router(management_routes.router, tags=["management-endpoints"])
