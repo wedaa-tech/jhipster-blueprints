@@ -17,8 +17,5 @@ fi
 
 # Step 4: Navigate to app directory and start the application
 cd app/
-<%_ if (postgresql) { _%>
-alembic upgrade head
-<%_ } _%>
 echo "Starting application with Gunicorn..."
 gunicorn -c gunicorn_dev_config.py main:app

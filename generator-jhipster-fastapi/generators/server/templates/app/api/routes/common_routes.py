@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 <%_ if (auth) {  _%>
 from core.auth import get_auth
 <%_ } _%>
@@ -7,8 +7,8 @@ from services.app_details import fetch_app_details
 from core.communication import communicate_with_service
 from fastapi import Request
 <%_ })} _%>
-router = APIRouter()
 
+router = APIRouter()
 
 
 @router.get(

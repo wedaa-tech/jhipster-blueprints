@@ -3,7 +3,7 @@ from mongo_migrate.base_migrate import BaseMigration
 
 class Migration(BaseMigration):
     def upgrade(self):
-        initial_notes = [
+        initial_note = [
             {
                 "subject": "First note",
                 "description": "This is the first note"
@@ -13,11 +13,11 @@ class Migration(BaseMigration):
                 "description": "This is the second note"
             }
         ]
-        self.db['notes'].insert_many(initial_notes)
+        self.db['note'].insert_many(initial_note)
         
     def downgrade(self):
-        self.db['notes'].delete_many({})
+        self.db['note'].delete_many({})
         
     def comment(self):
-        return 'first migration with sample data for notes collection'
+        return 'first migration with sample data for note collection'
     
