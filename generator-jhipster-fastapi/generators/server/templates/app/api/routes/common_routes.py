@@ -10,6 +10,7 @@ from fastapi import Request
 router = APIRouter()
 
 
+
 @router.get(
     "/rest/services/<%= baseName %>",
 <%_ if (auth) {  _%>
@@ -26,3 +27,4 @@ async def communicate_<%= appServer.baseName %>(request: Request):
     response = await communicate_with_service(request, rest_server="<%= appServer.baseName %>")
     return response
 <%_ })} _%>
+

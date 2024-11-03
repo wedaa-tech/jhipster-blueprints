@@ -249,11 +249,16 @@ export default class extends ServerGenerator {
           { condition: this.postgress, src: 'docker/postgresql.yml', dest: 'docker/postgresql.yml' }, 
 
           { condition: this.postgress, src: 'app/migrations/postgres/', dest: 'app/migrations/' }, 
+          { condition: this.mongodb, src: 'app/migrations/mongodb/', dest: 'app/migrations/' },
           
           { condition: this.postgress, src: 'app/api/postgres/note_routes.py', dest: 'app/api/routes/note_routes.py' }, 
+          { condition: this.mongodb, src: 'app/api/mongodb/note_routes.py', dest: 'app/api/routes/note_routes.py' },
           { condition: this.postgress, src: 'app/models/postgres/note.py', dest: 'app/models/note.py' }, 
+          { condition: this.mongodb, src: 'app/models/mongodb/note.py', dest: 'app/models/note.py' },
           { condition: this.postgress, src: 'app/repository/postgres/note_repository.py', dest: 'app/repository/note_repository.py' }, 
+          { condition: this.mongodb, src: 'app/repository/mongodb/note_repository.py', dest: 'app/repository/note_repository.py' },
           { condition: this.postgress, src: 'app/services/postgres/note_service.py', dest: 'app/services/note_service.py' },
+          { condition: this.mongodb, src: 'app/services/mongodb/note_service.py', dest: 'app/services/note_service.py' },
           { condition: this.postgress, src: 'app/alembic.ini', dest: 'app/alembic.ini' }, 
           
 

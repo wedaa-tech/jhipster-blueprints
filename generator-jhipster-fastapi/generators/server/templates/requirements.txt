@@ -1,6 +1,7 @@
 fastapi==0.110.0
 python-dotenv==1.0.1
 <% if(mongodb) { %>
+mongo-migrate==0.1.2
 motor==3.6.0
 <%_ } _%>
 <% if(auth) { %>
@@ -20,5 +21,6 @@ greenlet==3.1.1
 <%_ } _%>
 fastapi_auth_middleware==1.0.2
 xmltodict==0.13.0
-httpx==0.23.2<%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
+httpx==0.23.2
+<%_ if (rabbitmqClient?.length||rabbitmqServer?.length){  _%>
 pika==1.3.2<%_ } _%>

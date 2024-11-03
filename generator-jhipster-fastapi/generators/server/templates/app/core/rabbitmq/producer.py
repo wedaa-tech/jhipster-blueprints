@@ -7,10 +7,11 @@ import logging
 load_dotenv()
 logger = logging.getLogger(__name__)
 
+
 RABBIT_USER = os.getenv("RABBIT_USER")
 RABBIT_PS = os.getenv("RABBIT_PS")
-PIKA_HOST = os.getenv("PIKA_HOST")
-PIKA_PORT = os.getenv("PIKA_PORT")
+PIKA_HOST = os.getenv("PIKA_HOST", "127.0.0.1")
+PIKA_PORT = int(os.getenv("PIKA_PORT", 5672))
 
 
 class RabbitMQProducer:

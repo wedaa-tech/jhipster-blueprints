@@ -5,6 +5,9 @@ from api.routes import (
     <%_ if (postgresql) { _%>
     note_routes
     <%_ } _%>
+        <%_ if (mongodb) { _%>
+    note_routes
+    <%_ } _%>
 )
 <%_ if (eureka) { _%>
 from core import eureka
@@ -20,5 +23,9 @@ api_router.include_router(common_routes.router, tags=["common-endpoints"])
 api_router.include_router(eureka.router, tags=["eureka-endpoints"])
 <%_ } _%>
 <%_ if (postgresql) { _%>
+api_router.include_router(note_routes.router, tags=["notes-endpoints"])
+<%_ } _%>
+
+<%_ if (mongodb) { _%>
 api_router.include_router(note_routes.router, tags=["notes-endpoints"])
 <%_ } _%>
