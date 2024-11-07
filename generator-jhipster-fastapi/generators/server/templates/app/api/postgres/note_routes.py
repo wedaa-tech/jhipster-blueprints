@@ -9,7 +9,9 @@ from core.auth import get_auth
 <%_ } _%>
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/api'
+)
 
 # Dependency to provide a NoteService instance with session injection
 def get_note_service(db: AsyncSession = Depends(get_db)) -> NoteService:

@@ -10,9 +10,7 @@ from api.routes import (
 from core import eureka
 <%_ } _%>
 
-api_router = APIRouter(
-    prefix='/api'
-)
+api_router = APIRouter()
 
 api_router.include_router(management_routes.router, tags=["management-endpoints"])
 api_router.include_router(common_routes.router, tags=["common-endpoints"])

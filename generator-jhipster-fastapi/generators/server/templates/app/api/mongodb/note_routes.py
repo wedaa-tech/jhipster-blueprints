@@ -4,31 +4,36 @@ from models.note import Note
 from typing import List
 from core.mongodb import get_database
 from motor.motor_asyncio import AsyncIOMotorDatabase
+<%_ if (auth) { _%>
+from core.auth import get_auth
+<%_ } _%>
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/api'
+)
 
 # Dependency to provide a NoteService instance with MongoDB injection
 def get_note_service(db: AsyncIOMotorDatabase = Depends(get_database)) -> NoteService:
     return NoteService(db=db)
 
-@router.post("/notes", response_model=Note)
+@router.post("/notes", response_model=Note<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def create_note(note: Note, notes_service: NoteService = Depends(get_note_service)):
     return await notes_service.create_note(
         subject=note.subject, description=note.description
     )
 
-@router.get("/notes/{note_id}", response_model=Note)
+@router.get("/notes/{note_id}", response_model=Note<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def get_note(note_id: str, notes_service: NoteService = Depends(get_note_service)):
     note = await notes_service.get_note(note_id)
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
 
-@router.get("/notes", response_model=List[Note])
+@router.get("/notes", response_model=List[Note]<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def get_all_notes(notes_service: NoteService = Depends(get_note_service)):
     return await notes_service.get_all_notes()
 
-@router.delete("/notes/{note_id}")
+@router.delete("/notes/{note_id}"<%_ if (auth) { _%>, dependencies=[Depends(get_auth)]<%_ } _%>)
 async def delete_note(note_id: str, notes_service: NoteService = Depends(get_note_service)):
     success = await notes_service.delete_note(note_id)
     if not success:

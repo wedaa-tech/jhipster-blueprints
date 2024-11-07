@@ -22,10 +22,10 @@ async def run_migrations():
     """Run database migrations using mongo-migrate."""
     try:
         # Set up the migration configuration
-        MONGO_HOST = os.getenv("MONGO_HOST", "127.0.0.1")
-        MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
-        MONGO_DB = os.getenv("MONGO_DB", "notes")
-        MIGRATIONS_DIR = os.getenv("MIGRATIONS_DIR", "./app/migrations")
+        MONGO_HOST = os.getenv("MONGO_HOST")
+        MONGO_PORT = int(os.getenv("MONGO_PORT"))
+        MONGO_DB = os.getenv("MONGO_DB")
+        MIGRATIONS_DIR = os.getenv("MIGRATIONS_DIR")
 
         # Create the configuration object using SimpleNamespace
         config = SimpleNamespace(
@@ -50,9 +50,6 @@ async def connect_mongodb():
     """Attempt to connect to MongoDB and set the global client and database."""
     global client, database
     try:
-        # Run migrations
-        await run_migrations()
-
         mongo_db_host = os.getenv('MONGO_HOST')
         mongo_db_port = os.getenv('MONGO_PORT')
         mongo_db_name = os.getenv('MONGO_DB')

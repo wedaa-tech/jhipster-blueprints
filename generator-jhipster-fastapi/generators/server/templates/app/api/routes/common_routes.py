@@ -1,7 +1,8 @@
-from fastapi import APIRouter
-<%_ if (auth) {  _%>
+from fastapi import APIRouter<%_ if (auth) {  _%>, Depends
+<%_ } _%><%_ if (auth) {  _%>
 from core.auth import get_auth
 <%_ } _%>
+
 from services.app_details import fetch_app_details
 <%_ if (restServer?.length && !eureka && apiServers){ apiServers.forEach((appServer) =>  { _%>
 from core.communication import communicate_with_service

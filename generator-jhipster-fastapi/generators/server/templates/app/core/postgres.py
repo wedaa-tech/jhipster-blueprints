@@ -31,9 +31,6 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 async def connect_postgresql():
-    # Run migrations
-    await run_migrations()
-
     async with async_engine.begin() as connection:
         await connection.execute(text("SELECT 1"))
         logger.info("PostgreSQL connected successfully!")

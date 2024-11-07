@@ -17,5 +17,6 @@ fi
 
 # Step 4: Navigate to app directory and start the application
 cd app/
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 echo "Starting application with Gunicorn..."
 gunicorn -c gunicorn_dev_config.py main:app
