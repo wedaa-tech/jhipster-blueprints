@@ -11,9 +11,14 @@ by WeDAA (https://www.wedaa.tech/)
 #       $ gunicorn -c=gunicorn_dev_config.py main:app
 #
 """
-import asyncio
 <%_ if (eureka) { _%>
 from core import eureka
+<%_ } _%><%_ if (rabbitmqClient != null && rabbitmqClient.length) { _%>
+import asyncio
+import logging
+import os
+import signal
+from main import send_message
 <%_ } _%>
 
 # ===============================================
@@ -51,6 +56,24 @@ reload = True
 
 loglevel = 'info'
 
+<%_ if (rabbitmqClient != null && rabbitmqClient.length) { _%>
+# ===============================================
+#           RabbitMQ Producer util
+# ===============================================
+async def send_messages_concurrently():
+    try:
+        <%_ for (let i = 0; i < rabbitmqClient.length; i++) { _%>
+        task<%= i + 1 %> = asyncio.create_task(
+                send_message("<%= baseName %>_<%= rabbitmqClient[i] %>", {"producer": "<%= baseName %>", "consumer": "<%= rabbitmqClient[i] %>"})
+            )
+        <%_ } _%>
+        
+        # Wait for all tasks to finish
+        await asyncio.gather(<%_ for (let i = 0; i < rabbitmqClient.length; i++) { _%>task<%= i + 1 %><%= i + 1 < rabbitmqClient.length ? ', ' : '' %><%_ } _%>)
+    except Exception as e:
+        logging.error(f"Error during startup: {e}")
+<%_ } _%>
+
 
 # ===============================================
 #           Server Hooks
@@ -63,7 +86,12 @@ def on_starting(server):
     <%_ if (eureka) { _%>
     asyncio.run(eureka.startup_event())
     <%_ } _%>
-
+    <%_ if (rabbitmqClient != null && rabbitmqClient.length) { _%>
+    loop = asyncio.new_event_loop()  # Create a new event loop
+    asyncio.set_event_loop(loop)  # Set it as the current event loop
+    loop.run_until_complete(send_messages_concurrently())
+    loop.close()  # Close the loop after the task is done
+    <%_ } _%>
 
 def when_ready(server):
     """
@@ -78,3 +106,16 @@ def on_exit(server):
     <%_ if (eureka) { _%>
     asyncio.run(eureka.shutdown_event())
     <%_ } _%>
+
+<%_ if (rabbitmqClient != null && rabbitmqClient.length) { _%>
+def handle_signal(signum, frame):
+    """
+    Handle signals like SIGINT and SIGTERM.
+    """
+    logging.info("Signal received, exiting immediately.")
+    os._exit(0)  # Exit immediately on signal
+
+# Register signal handlers
+signal.signal(signal.SIGINT, handle_signal)
+signal.signal(signal.SIGTERM, handle_signal)
+<%_ } _%>

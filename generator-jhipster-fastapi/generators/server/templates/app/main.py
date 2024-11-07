@@ -13,14 +13,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
 import logging
-<%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
-import asyncio                                
-from core.rabbitmq.RabbitMQConsumer<%= rabbitmqServer[0][0].toUpperCase() + rabbitmqServer[0].slice(1) %>To<%= baseName[0].toUpperCase() + baseName.slice(1) %> import RabbitMQConsumer  # Adjust import as needed
-<%_ } _%>
+import asyncio
 <%_ if (rabbitmqClient != null && rabbitmqClient.length) { _%>
-from core.rabbitmq.RabbitMQProducer<%= baseName[0].toUpperCase() + baseName.slice(1) %>To<%= rabbitmqClient[0][0].toUpperCase() + rabbitmqClient[0].slice(1) %> import RabbitMQProducer
+from core.rabbitmq.rabbitmq_producer import send_message_to_queue
+import asyncio
+<%_ } _%><%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
+from core.rabbitmq.rabbitmq_consumer import RabbitMQConsumer
+import asyncio
 <%_ } _%>
-
 
 SERVER_PORT = int(os.getenv("SERVER_PORT", <%= serverPort != null ? serverPort : 9000 %>))
 
@@ -28,48 +28,61 @@ SERVER_PORT = int(os.getenv("SERVER_PORT", <%= serverPort != null ? serverPort :
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-<%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
-# Initialize RabbitMQ Consumer
-consumer = RabbitMQConsumer(exchange_name='direct_logs', queue_name='data_queue', routing_key='pro_queue')
-print("RabbitMQ Consumer initialized")
-<%_ } _%>
-
 <%_ if (rabbitmqClient != null && rabbitmqClient.length) { _%>
-# Initialize RabbitMQ Producer
-producer = RabbitMQProducer(exchange_name='direct_logs')
+async def send_message(queue_name, message):
+    while True:
+        await send_message_to_queue(queue_name, message)
+        await asyncio.sleep(10)
 <%_ } _%>
 
-<%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
-# Async function to start the RabbitMQ consumer
-async def start_consumer():
-    """Run the RabbitMQ consumer in an asynchronous task."""
-    loop = asyncio.get_event_loop()
-    await loop.run_in_executor(None, consumer.start_consuming)
-<%_ } _%>
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting FastAPI application.")
-    <%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
-    asyncio.create_task(start_consumer())  # Start RabbitMQ consumer as a background task
-    <%_ } _%>
-
     <%_ if (mongodb){  _%>
     await mongodb.connect_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
     await postgres.connect_postgresql()
     <%_ } _%>
+<%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
+    # Get the list of queue names from environment variables
+    queue_names = os.getenv("CONSUME_QUEUES").split(',')
+
+    # Create a list to hold the consumer instances
+    consumers = []
+
+    # Get the current running loop
+    loop = asyncio.get_event_loop()
+    
+    # Create an instance of RabbitMQConsumer for each queue and start them
+    for queue_name in queue_names:
+        consumer = RabbitMQConsumer(queue_name=queue_name, process_callable=log_incoming_message)
+        consumers.append(consumer)
+        task = loop.create_task(consumer.consume(loop))
+    <%_ } _%>   
 
     yield 
-    logger.info("Stopping FastAPI application.")
+
     <%_ if (mongodb){  _%>
     await mongodb.disconnect_mongodb()
     <%_ } _%>
     <%_ if (postgresql){  _%>
     await postgres.disconnect_postgresql()
     <%_ } _%>
+<%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
+    # Close all consumers
+    for consumer in consumers:
+        await consumer.close()
+<%_ } _%>  
+    logger.info("Stopping FastAPI application.")
+
+<%_ if (rabbitmqServer != null && rabbitmqServer.length) { _%>
+def log_incoming_message(message: dict):
+    """Handle incoming message data"""
+    logger.info("Processed incoming message: %s", message)
+<%_ } _%>  
 
 app = FastAPI(lifespan=lifespan)
 
