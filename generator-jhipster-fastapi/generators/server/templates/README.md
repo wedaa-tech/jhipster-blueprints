@@ -25,9 +25,13 @@ Docker compose files are provided for the same to get started quickly.
 Component details:
 <%_ if (auth) { _%>
 - Keycloak as Identity Management: `docker compose -f docker/keycloak.yml up -d`
+- Open [http://localhost:9080](Keycloak Administration Console) to view it in your browser.
+- Default Username: `admin`, Password: `admin`. 
 <%_ } _%>
 <%_ if (eureka) { _%>
 - Eureka Service Discovery: `docker compose -f docker/jhipster-registry.yml up -d`
+- Open [http://localhost:8761](Eureka Service Discovery) to view it in your browser.
+- Default Username: `admin`, Password: `admin`. 
 <%_ } _%>
 <%_ if (postgresql) { _%>
 - Postgresql DB: `docker compose -f docker/postgresql.yml up -d`
@@ -79,3 +83,8 @@ Open [http://localhost:<%= serverPort %>/management/health/readiness](http://loc
 Build the docker image: `docker build -t <%= baseName %>:latest .`
 
 Start the container: `docker run -d -p <%= serverPort %>:<%= serverPort %> <%= baseName %>:latest`
+
+<%_ if ( restServer.length > 0 || rabbitmqClient.length > 0 ){ _%>
+## Communication
+Refer [COMMUNICATION.md](./COMMUNICATION.md)
+<%_ } _%>

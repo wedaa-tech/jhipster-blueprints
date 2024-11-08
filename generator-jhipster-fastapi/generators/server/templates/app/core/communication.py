@@ -8,7 +8,7 @@ async def get_service_url(rest_server: str):
     print(f"Retrieved service URL for {rest_server}: {service_url}")
     if not service_url:
         raise HTTPException(status_code=500, detail=f"Service URL not found for {rest_server}")
-    return service_url + f"/rest/services/{rest_server}"
+    return service_url + f"/api/services/{rest_server}"
 
 async def communicate_with_service(request: Request, rest_server: str, auth: bool = False):
     try:

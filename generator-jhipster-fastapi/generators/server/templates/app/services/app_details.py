@@ -7,7 +7,7 @@ def fetch_app_details():
     logger.info("Generating application details")
     app_details = {
         "status": "running", 
-        "service": APP_NAME
+        "server": APP_NAME
     }
     return app_details
     
