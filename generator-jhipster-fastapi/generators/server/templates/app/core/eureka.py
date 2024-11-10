@@ -2,6 +2,9 @@ import uuid
 from py_eureka_client import eureka_client
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+<%_ if (auth) {  _%>
+from fastapi import Request 
+<%_ } _%>
 import os
 import logging
 
@@ -32,6 +35,19 @@ async def startup_event():
     except Exception as e:
         logger.error(f"Failed to register service {APP_NAME} with Eureka: {e}")
 
+async def refresh_registry():
+    """
+    Utility method to retrieve the EurekaClient instance and refresh its registry.
+    """
+    try:
+        logger.info("Refreshing Eureka client registry...")
+        client = eureka_client.get_client()  # Retrieve the EurekaClient instance
+        await client._EurekaClient__pull_full_registry()  # Call the private method
+        logger.info("Eureka client registry refreshed successfully.")
+    except Exception as e:
+        logger.error(f"Failed to refresh Eureka client registry: {e}")
+        raise HTTPException(status_code=500, detail="Failed to refresh Eureka client registry")
+    
 async def shutdown_event():
     logger.info("Shutting down Eureka client...")
     try:
@@ -40,16 +56,34 @@ async def shutdown_event():
     except Exception as e:
         logger.error(f"Failed to shut down Eureka client: {e}")
 
+
 <%_ if (restServer?.length && apiServers){ apiServers.forEach((appServer) =>  { _%>
 @router.get("/<%= appServer.baseName %>")
-async def <%= appServer.baseName %>():
+async def <%= appServer.baseName %>(<%_ if (auth) {  _%>request: Request<%_ } _%>):
     try:
-        app = await eureka_client.do_service_async(app_name="<%= appServer.baseName %>", service="/api/services/<%= appServer.baseName %>", return_type="json")
+        # Refresh the Eureka client registry
+        await refresh_registry()
+
+        <%_ if (auth) {  _%>
+        headers = {}
+        auth_header = request.headers.get("Authorization")
+        if auth_header:
+            headers["Authorization"] = auth_header
+        <%_ } _%>
+
+        # Perform the service call
+        app = await eureka_client.do_service_async(
+            app_name="<%= appServer.baseName %>",
+            service="/api/services/<%= appServer.baseName %>",
+            <%_ if (auth) {  _%>
+            headers=headers,
+            <%_ } _%>
+            return_type="json")
         return app
        
     except Exception as e:
         # Handle other exceptions
         print("An error occurred:", e)
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=500, detail="Internal Server Error, Try Again!")
 
 <%_ })} _%>

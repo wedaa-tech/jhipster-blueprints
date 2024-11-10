@@ -77,11 +77,14 @@ loglevel = 'info'
 # ===============================================
 async def send_messages_concurrently():
     try:
-        <%_ for (let i = 0; i < rabbitmqClient.length; i++) { _%>
+<%_ for (let i = 0; i < rabbitmqClient.length; i++) { _%>
         task<%= i + 1 %> = asyncio.create_task(
-                send_message("<%= baseName %>_<%= rabbitmqClient[i] %>", {"producer": "<%= baseName %>", "consumer": "<%= rabbitmqClient[i] %>"})
-            )
-        <%_ } _%>
+            send_message("<%= baseName.charAt(0).toUpperCase() + baseName.slice(1) %>To<%= rabbitmqClient[i].charAt(0).toUpperCase() + rabbitmqClient[i].slice(1) %>_message_queue",
+            {"producer": "<%= baseName.charAt(0).toUpperCase() + baseName.slice(1) %>", "consumer": "<%= rabbitmqClient[i].charAt(0).toUpperCase() + rabbitmqClient[i].slice(1) %>"}
+        )
+    )
+<%_ } _%>
+
         
         # Wait for all tasks to finish
         await asyncio.gather(<%_ for (let i = 0; i < rabbitmqClient.length; i++) { _%>task<%= i + 1 %><%= i + 1 < rabbitmqClient.length ? ', ' : '' %><%_ } _%>)
