@@ -1,5 +1,5 @@
-
-FROM  python:3.9-slim AS base
+# Use Python 3.9 slim as the base image
+FROM python:3.9-slim AS base
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -16,8 +16,8 @@ COPY . .
 # Set the working directory to the app folder
 WORKDIR /app/app
 
-# Command to run the application using uvicorn
-# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+# Set environment variable
+ENV OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
-# Command to run the application using Gunicorn 
-CMD ["gunicorn", "main:app", "--workers", "10", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:80", "--timeout", "300"]
+# Command to run the application using gunicorn with external config
+CMD ["gunicorn", "-c", "gunicorn_prod_config.py", "main:app"]

@@ -41,7 +41,7 @@ async def async_migration():
 # ===============================================
 
 # bind - The server socket to bind
-bind = "0.0.0.0:<%= serverPort != null ? serverPort : 9000 %>" 
+bind = "0.0.0.0:<%= serverPort %>" 
 
 # ===============================================
 #           Worker Processes
