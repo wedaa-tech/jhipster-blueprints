@@ -84,7 +84,7 @@ Build the docker image: `docker build -t <%= baseName %>:latest .`
 
 Start the container: `docker run -d -p <%= serverPort %>:<%= serverPort %> <%= baseName %>:latest`
 
-<%_ if ( restServer.length > 0 || rabbitmqClient.length > 0 ){ _%>
+<%_ if ( restServer?.length > 0 || rabbitmqClient?.length > 0 ){ _%>
 ## Communication
 Refer [COMMUNICATION.md](./COMMUNICATION.md)
 <%_ } _%>

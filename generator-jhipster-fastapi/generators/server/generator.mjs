@@ -266,8 +266,8 @@ export default class extends ServerGenerator {
           { condition: this.mongodb, src: 'docker/mongodb.yml', dest: 'docker/mongodb.yml' },
 
     
-          { condition: (( restServer.length > 0 && !this.eureka )), src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
-          { condition: (( restServer.length > 0 || rabbitmqClient.length > 0 )), src: 'COMMUNICATION.md', dest: 'COMMUNICATION.md' }, 
+          { condition: (( restServer?.length > 0 && !this.eureka )), src: 'app/core/communication.py', dest: 'app/core/communication.py' }, 
+          { condition: (( restServer?.length > 0 || rabbitmqClient?.length > 0 )), src: 'COMMUNICATION.md', dest: 'COMMUNICATION.md' }, 
 
           { condition: this.eureka, src: 'app/core/eureka.py', dest: 'app/core/eureka.py' }, 
           { condition: this.eureka, src: 'docker/jhipster-registry.yml', dest: 'docker/jhipster-registry.yml' }, 
@@ -275,8 +275,8 @@ export default class extends ServerGenerator {
 
 
           { condition: this.rabbitmq, src: 'docker/rabbitmq.yml', dest: 'docker/rabbitmq.yml' },
-          { condition: (( this.rabbitmq && rabbitmqClient.length > 0)), src: 'app/core/rabbitmq/rabbitmq_producer.py', dest: 'app/core/rabbitmq/rabbitmq_producer.py' }, 
-          { condition: (( this.rabbitmq && rabbitmqServer.length > 0)), src: 'app/core/rabbitmq/rabbitmq_consumer.py', dest: 'app/core/rabbitmq/rabbitmq_consumer.py' }, 
+          { condition: (( this.rabbitmq && rabbitmqClient?.length > 0)), src: 'app/core/rabbitmq/rabbitmq_producer.py', dest: 'app/core/rabbitmq/rabbitmq_producer.py' }, 
+          { condition: (( this.rabbitmq && rabbitmqServer?.length > 0)), src: 'app/core/rabbitmq/rabbitmq_consumer.py', dest: 'app/core/rabbitmq/rabbitmq_consumer.py' }, 
 
         ]
 
