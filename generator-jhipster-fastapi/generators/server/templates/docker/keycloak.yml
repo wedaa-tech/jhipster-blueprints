@@ -4,7 +4,6 @@ services:
     keycloak:
         image: quay.io/keycloak/keycloak:20.0.1
         command: ['start-dev --import-realm']
-        #command: ["start-dev", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING", "-Dkeycloak.migration.file=/opt/keycloak/data/import/wda-realm.json"]
         volumes:
             - ./realm-config:/opt/keycloak/data/import
         environment:
