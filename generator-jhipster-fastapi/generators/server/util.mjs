@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
-// import databaseTypes from '/Users/konda/Documents/wedaa/generator-jhipster/dist/jdl/jhipster/database-types.js';
 
 let communications = [];
 
