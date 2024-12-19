@@ -8,6 +8,9 @@ from core.log_config import logger
 from alembic.config import Config
 from alembic import command
 
+from dotenv import load_dotenv
+load_dotenv()
+
 POSTGRESQL_DB_URL = os.getenv("POSTGRESQL_DB_URL")
 
 # Create an async SQLAlchemy engine
